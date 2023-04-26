@@ -74,9 +74,11 @@ for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
 %  pop_eegplot( EEG, 1, 1, 1);    
     %EEG.chanlocs=chanlocs;
     %EEG=pop_chanedit(EEG, chanlocs); 
+    %figure; topoplot([],EEG.chanlocs, 'style', 'blank',  'electrodes', 'labelpoint', 'chaninfo', EEG.chaninfo)
 %% remove un-needed channels
     disp(['remove un-needed channels  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     remove_channels= {'lz' 'VEO' 'HEO' 'VEOG' 'HEOG' 'EKG' 'EMG' 'EOG' 'HL 1' 'HL 2' 'Trigger'};
+    %figure; topoplot([],EEG.chanlocs, 'style', 'blank',  'electrodes', 'labelpoint', 'chaninfo', EEG.chaninfo)
     % remove_channels= {'F11' 'F12' 'FT11' 'FT12' 'TP9' 'TP10' 'CB1' 'CB2' 'lz' 'M1' 'M2' 'VEO' 'HEO' 'VEOG' 'HEOG' 'EKG' 'EMG' 'EOG' 'HL 1' 'HL 2' 'Trigger'};
     % remove_channels= {'TP9' 'TP10' 'CB1' 'CB2' 'lz' 'M1' 'M2' 'VEO' 'HEO' 'VEOG' 'HEOG' 'EMG' 'EOG' 'HL 1' 'HL 2' 'Trigger'};
     chanlocs62=EEG.chanlocs;
@@ -618,11 +620,13 @@ disp('Current dataset'), disp(CURRENTSET);
 %load('D:\Google_Drive\MATLAB\LAB_MatlabScripts\chanlocs68.mat');
 %load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat'); chanlocs=chanlocs62;
 %load('D:\OneDrive\DATA\Theta-Burst-Dose_tremblay\channel_locations\Chanlocs_64Ch-EasyCap_for_BrainAmp_AFz_FCz.mat'); chanlocs=chanlocs62;
+pathi='D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA2\final1\'
 chan_interp='on'
 chanlocs=chanlocs66;
 STDcalc=0
-Z2_grand_average('WL_SP_POST',[1:6],chan_interp,chanlocs,STDcalc) 
+Z2_grand_average('WL_SP_all',[1:6],pathi, chan_interp,chanlocs,STDcalc) 
 
+figure; plot(EEG.times,squeeze(EEG.data(elecName(EEG,{'f3'}),:,:))); ylim([-40 40]); xlim([-300 300])
 figure; plot(EEG.times,squeeze(EEG.data(elecName(EEG,{'f3'}),:,:))); ylim([-40 40]); xlim([-300 300])
 
 

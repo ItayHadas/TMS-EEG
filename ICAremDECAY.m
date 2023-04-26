@@ -3,7 +3,7 @@ function [EEG] = ICAremDECAY(EEG)
 
 % ROI = {'Fpz' 'Fp2' 'AF8' 'F8' 'FT8' 'AFz' 'AF4' 'F6' 'FC6' 'Fz' 'F2' 'F4' 'FC4' 'FC2' };
 ROIThresh=0.65;
-ROI = {'F3' 'FP1' 'fpz' 'fp2' 'AF3' 'F1' 'FT7' 'AF5' 'F7' 'FC7' 'FC5' 'F5' 'FC3' 'c3' 'c5' 't7' 'af7' 'fpz' 'afz' 'fz' 'fcz'};
+ROI = {'F3' 'FP1' 'fpz' 'fp2' 'AF3' 'F11' 'FT11' 'F12' 'FT12' 'F1' 'FT7' 'AF5' 'F7' 'FC7' 'FC5' 'F5' 'FC3' 'c3' 'c5' 't7' 'af7' 'fpz' 'afz' 'fz' 'fcz'};
 tmsMuscleThresh=5; % best threshold is 7 if the the decay is longer try to reduce the number
 maxcomps=40 ;%how many ICA components to check
 remocomp=5 ;% how many ICA comp. to remove.
@@ -16,7 +16,8 @@ remocomp=5 ;% how many ICA comp. to remove.
 %         fileName=fileNames{i,1};
 %     end
 %      [ num2str(i) ' out of ' num2str(size(fileNames,1)) '   -   ' fileName ]
-%     EEG = pop_loadset( [pathName fileName]);
+%     EEG = pop_loadset( ['D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA1\WEL003_SPD_BL_Epo_Dec_interp_ICA1.set']);
+%D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA1\WEL003_SPD_BL_Epo_Dec_interp_ICA1.set
 %     EEG = eeg_checkset( EEG );
 %     %% report table
 %     out = table;
@@ -34,8 +35,8 @@ eNum= sort(elecName(EEG, ROI));
 % TMS_pop_selectcomps(EEG, [1:35] );
 %Calculates time course and variance
 compTimeCourse = arrayfun(@(x)eeg_getdatact(EEG, 'component', [x], 'projchan', [eNum]),1:size(EEG.icawinv,2),'UniformOutput', false);
-
-
+% pop_selectcomps(EEG, [1:28] );
+%figure; topoplot([],EEG.chanlocs, 'style', 'blank',  'electrodes', 'labelpoint', 'chaninfo', EEG.chaninfo)
 for compNum=comps % compNum=1
     tempCompZ = zscore(EEG.icawinv(:,compNum));
     ActivRatio = mean(abs(tempCompZ(eNum,:)));
@@ -71,7 +72,7 @@ for compNum=comps  % (1:remocomp) %compNum=comps(suspects(1))
 end
 %    [find(compRem,remocomp)']
 % pop_plotdata(EEG, 0, [1:size(EEG.icaweights,1)] , [1:size(EEG.data,3)], EEG.setname, 0, 1, [0 0]);
-% TMS_pop_selectcomps(EEG, [1:35] );
+% pop_selectcomps(EEG, [1:28] );
 
 if sum(compRem)>0
     setname1=EEG.setname;

@@ -1,11 +1,11 @@
-function Z2_grand_average(EventName, Subsind,chan_interp,chanlocs,STDcalc)
+function Z2_grand_average(EventName, Subsind,pathi,chan_interp,chanlocs,STDcalc)
 %EventName='WL_SP_PRE'; Subsind=[1:6],chan_interp,chanlocs,STDcalc=0
 % EventName='ThetaB_1_Pre',Subsind=[2:10]
 % EventName='ADHD1_1-15ms-ala_rogash'
 % EventName='MST_motor_HC'   EventName='pre_MST2a'
 % EventName='post_rtms'
 % Subsind=4:6
-[fileNames, pathName]=Z_getSetsFileNames('set');
+[fileNames, pathName]=Z_getSetsFileNames('set',pathi);
 % EventName='Healthy1_1-exponent_15ms'; Subsind=[5:7];
 % EventName='LICI1_non'
 for i=1: size(fileNames,1)
