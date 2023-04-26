@@ -1,9 +1,11 @@
-function [fileNames, pathName]=Z_getSetsFileNames(ext)
+function [fileNames, pathName]=Z_getSetsFileNames(ext,pathi)
 
 if nargin < 1
-    [fileNames,pathName] = uigetfile({'*.*'},'Choose Files','multiselect','on');
-else
-    [fileNames,pathName] = uigetfile({['*.' ext]},['Choose ' ext ' Files'],'multiselect','on');
+    [fileNames,pathName] = uigetfile({['*.*']},'Choose Files','multiselect','on');
+elseif nargin == 1
+    [fileNames,pathName] = uigetfile({['*.' ext]},'Choose Files','multiselect','on');
+elseif nargin == 2
+    [fileNames,pathName] = uigetfile({[pathi '*.' ext]},['Choose ' ext ' Files'],'multiselect','on');
 end
 
 if ~iscell(fileNames)

@@ -531,7 +531,8 @@ pop_comperp( ALLEEG, 1, [1 2 3] ,[],'addavg','off','addstd','off','addall','on',
 %           
 %% load
 clear all
-[fileNames, pathName]=Z_getSetsFileNames('set');
+pathi='D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\ICA2\';
+[fileNames, pathName]=Z_getSetsFileNames('set',pathi);
 i=0
 %%
 i=i+1;
