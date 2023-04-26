@@ -10,7 +10,7 @@ clear all
 %  chanlocs62 = readlocs( 'A:\Workingset-A\shengze_tmseeg_202007_test_ZNN\ANT_64.ced');    
 %  load('D:\Google_Drive\MATLAB\LAB_MatlabScripts\Chanlocs_64Ch-EasyCap_for_BrainAmp_AFz_FCz.mat');%ST-THETA-BURST
 %  chanlocs=chanlocs62; %ST-THETA-BURST
-for i=1: size(fileNames,1) % PIPELINE LOOP
+for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
 %% loading the files
     
     fileName=fileNames{i};
@@ -551,7 +551,7 @@ RejComp=sort([find(any(EEG.etc.ic_classification.ICLabel.classifications(:,4:6)>
 % pop_selectcomps(EEG, [1:35] );
 % pop_selectcomps(EEG, [36:55] );
 EEG = pop_iclabel(EEG, 'default');
-pop_viewprops( EEG, 0, [1:35], {'freqrange', [2 60]}, {}, 1, '' )
+EEG = pop_viewprops( EEG, 0, [1:35], {'freqrange', [2 60]}, {}, 1, '' )
 % EEG = pop_select( EEG,'nochannel',7);
 % pop_eegplot( EEG, 1, 1, 1); 
 % plot(EEG.times,EEG.data(5,:,2))

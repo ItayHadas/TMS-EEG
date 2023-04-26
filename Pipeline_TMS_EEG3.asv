@@ -10,7 +10,7 @@ clear all
 %  chanlocs62 = readlocs( 'A:\Workingset-A\shengze_tmseeg_202007_test_ZNN\ANT_64.ced');    
 %  load('D:\Google_Drive\MATLAB\LAB_MatlabScripts\Chanlocs_64Ch-EasyCap_for_BrainAmp_AFz_FCz.mat');%ST-THETA-BURST
 %  chanlocs=chanlocs62; %ST-THETA-BURST
-for i=1: size(fileNames,1) % PIPELINE LOOP
+for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
 %% loading the files
     
     fileName=fileNames{i};
@@ -531,10 +531,11 @@ pop_comperp( ALLEEG, 1, [1 2 3] ,[],'addavg','off','addstd','off','addall','on',
 %           
 %% load
 clear all
-[fileNames, pathName]=Z_getSetsFileNames('set',path);
+pathi='D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\ICA2\';
+[fileNames, pathName]=Z_getSetsFileNames('set',pathi);
 i=0
 %%
-i=i+1;
+i=i+1; %hhh
 fileName=fileNames{i};
 EEG = pop_loadset( [pathName fileName]);
 [EEG, ~] = tesa_sortcomps(EEG);
