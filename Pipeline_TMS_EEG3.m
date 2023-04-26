@@ -535,7 +535,7 @@ pathi='D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\ICA2\';
 [fileNames, pathName]=Z_getSetsFileNames('set',pathi);
 i=0
 %%
-i=i+1;
+i=i+1; %hhh
 fileName=fileNames{i};
 EEG = pop_loadset( [pathName fileName]);
 [EEG, ~] = tesa_sortcomps(EEG);
