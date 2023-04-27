@@ -82,6 +82,6 @@ pathi='D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA2\final1\'
 chan_interp='on'
 chanlocs=chanlocs66;
 STDcalc=0
-Z2_grand_average('WL_SP_pre',[1:6],pathi, chan_interp,chanlocs,STDcalc) 
+Z2_grand_average('WL_SP_post',[1:6],pathi, chan_interp,chanlocs,STDcalc) 
 
 % figure; plot(EEG.times,squeeze(EEG.data(elecName(EEG,{'f3'}),:,:))); ylim([-40 40]); xlim([-300 300])

@@ -42,15 +42,16 @@ clear -vars pathName fileNames
 %% Load Wellcome-LEAP GRANDS
 %[fileNames, pathName]=Z_getSetsFileNames;
 clear all
+pathi='D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA2\final1'
 cd 'D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA2\remcomp'
-cd 'D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\ICA2\remcomp'
+cd 'D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA2\final1'
 
 load('D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA2\remcomp');% 'D:\OneDrive\PhD Zangen\ADHD\avi''s paper\BIG_FINAL_DATA_table.mat'
 %Final4=Final4(:,[1:23 26:27 30:34 46:40 42:end]);
 %pathName='D:\WORKINGSET_D\ADHD\';
-pathName='D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\ICA2\remcomp';
-fileNames=[{'WL_SP_PRE_GrandAverage.set'},...
-     {'WL_SP_POST_GrandAverage.set'}];
+pathName=pathi;
+fileNames=[{'WL_SP_pre_GrandAverage.set'},...
+     {'WL_SP_post_GrandAverage.set'}];
 ALLEEG=pop_loadset('filepath' , pathName, 'filename',fileNames);
 ALLEEG(1).condition = 'PRE';
 ALLEEG(2).condition = 'POST';
@@ -153,8 +154,8 @@ dataset=[1 2]
 Groups= {ALLEEG(dataset(1)).condition ALLEEG(dataset(2)).condition}%{'Pre' 'Post'};
 wavgrph='on'
 violinplt='on'
-fixfit='o'
-facelift='o'
+fixfit='on'
+facelift='on'
 LMFPgrph='on'
 GMFPgrph='o'
 ISP='o'
@@ -163,11 +164,11 @@ rectyfied='o'
 stichsize=17
 % P30: 20-40ms, N45: 40-50ms, P60: 50-70ms, N100: 100-130ms, P180: 160-250ms 
 name='P30'
-statwin=[20 90]; % for N200 [160 220]
+statwin=[0 1]; % for N200 [160 220]
 
 % graamplot.export('file_name',strrep(['violin ' name ' ' num2str(statwin)],' ','_'),'file_type','pdf')
 elec={'fc3' 'fc4' 'f3' 'f5'} % 'f2' 'fc2' 'fc4' 'fc6' 'fcz' 'fc2' 'fc4' 'fz' 'f2' 'f4' 'fc2' 'fc4' 'fcz'  'fcz' 'fz'     for N200  {'fc2','fc4' ,'f2' , 'f4'} {'f2' 'f4' 'fz'  'f4' 'fc4'      'fcz' 'fc2' 'fc4'      'f2' 'fz' 'f2' 'f4' 'fz'  'fcz' 'fc2' 'fc4'
-timeWin=[-100 500];
+timeWin=[-150 150];
 amp=20
 method='LMFP'; %'mean''admean''AUC''LMFP'
 rem_outlie='off'
