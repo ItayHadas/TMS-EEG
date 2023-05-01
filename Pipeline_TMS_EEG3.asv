@@ -55,7 +55,7 @@ for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
 %  figure; topoplot([],EEG.chanlocs, 'style', 'blank',  'electrodes', 'labelpoint', 'chaninfo', EEG.chaninfo);
 %  pop_eegplot( EEG, 1, 1, 1);
 %  figure; pop_spectopo(EEG, 1, [-200  500], 'EEG' , 'percent', 50, 'freq', [6 10 22 45], 'freqrange',[2 60],'electrodes','off');
-% figure; plot(EEG.times,squeeze(EEG.data(elecName(EEG,{'Oz'}),:)))
+% figure; plot(EEG.times,squeeze(mean(EEG.data(elecName(EEG,{'f3'}),:)]),3)))
 %%  fix chanlocs - (change back to regular chanlocs!)
     %disp(['Fix Chanlocs  - dataset ' num2str(i) '/' num2str(size(fileNames,1))])
 %   default TEMERTY cap

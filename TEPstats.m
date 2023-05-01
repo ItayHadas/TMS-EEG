@@ -255,26 +255,33 @@ end
 %export_fig diff_ADHD_Healthy_stp0.pdf -q101 -painters -append
 
 %% wave PLOTS
+if isfield(ALLEEG,'tmscut')
+    maxtrim = max(structfun(@max, getfield(ALLEEG,'tmscut')))+1;
+    mintrim = min(structfun(@min, getfield(ALLEEG,'tmscut')))-3;
+else
+    maxtrim = 15
+    mintrim = -5
+end
+
 
 if strcmp(GMFPgrph,'on')
     figure('position', [500 200 600 400]); hold on;
     f=fill([statwin statwin(2) statwin(1)],[amp amp 0 0],'-k','facealpha',.15,'edgecolor','none'); %'facealpha',.15,,'-k','LineWidth',2
-    patch([ALLEEG(dataset(:,1)).times(timeInd) fliplr(ALLEEG(dataset(:,1)).times(timeInd))],[GMFP(:,:,dataset(:,1))-GMFPste(:,:,dataset(:,1)) fliplr(GMFP(:,:,dataset(:,1))+GMFPste(:,:,dataset(:,1)))],[color{dataset(:,1)}.*0.7],'EdgeColor','none','FaceVertexAlphaData',0.1,'FaceAlpha',0.3) %,'FaceVertexAlphaData',0.7,'FaceAlpha',0.3
+    pp1=patch([ALLEEG(dataset(:,1)).times(timeInd) fliplr(ALLEEG(dataset(:,1)).times(timeInd))],[GMFP(:,:,dataset(:,1))-GMFPste(:,:,dataset(:,1)) fliplr(GMFP(:,:,dataset(:,1))+GMFPste(:,:,dataset(:,1)))],[color{dataset(:,1)}.*0.7],'EdgeColor','none','FaceVertexAlphaData',0.1,'FaceAlpha',0.3) %,'FaceVertexAlphaData',0.7,'FaceAlpha',0.3
     p1=plot(ALLEEG(dataset(:,1)).times(timeInd),GMFP(:,:,dataset(:,1)),'LineWidth',2);
     p1.Color=color{dataset(:,1)};
-    patch([ALLEEG(dataset(:,2)).times(timeInd) fliplr(ALLEEG(dataset(:,2)).times(timeInd))],[GMFP(:,:,dataset(:,2))-GMFPste(:,:,dataset(:,2)) fliplr(GMFP(:,:,dataset(:,2))+GMFPste(:,:,dataset(:,2)))],[color{dataset(:,2)}.*0.7],'EdgeColor','none','FaceVertexAlphaData',0.1,'FaceAlpha',0.3)%,'FaceVertexAlphaData',0.7,'FaceAlpha',0.3  ,'FaceVertexAlphaData',0.1,'FaceAlpha',0.3
+    pp2=patch([ALLEEG(dataset(:,2)).times(timeInd) fliplr(ALLEEG(dataset(:,2)).times(timeInd))],[GMFP(:,:,dataset(:,2))-GMFPste(:,:,dataset(:,2)) fliplr(GMFP(:,:,dataset(:,2))+GMFPste(:,:,dataset(:,2)))],[color{dataset(:,2)}.*0.7],'EdgeColor','none','FaceVertexAlphaData',0.1,'FaceAlpha',0.3)%,'FaceVertexAlphaData',0.7,'FaceAlpha',0.3  ,'FaceVertexAlphaData',0.1,'FaceAlpha',0.3
     p2=plot(ALLEEG(dataset(:,2)).times(timeInd),GMFP(:,:,dataset(:,2)),'LineWidth',2);
     p2.Color=color{dataset(:,2)};
     axis([timeWin 0 amp]);
-    %set(gca, 'ylimmode', 'auto')
     yy=max(get(gca,'YLim')); %yy=yy.*0.1+yy;
-    fb=fill([0 15 15 0],[yy yy 0 0],'w','edgecolor','none');
+    fb=fill([mintrim maxtrim maxtrim mintrim],[yy yy 0 0],'w','edgecolor','none');
     ax=gca; ax.XAxisLocation='origin' ;  ax.FontName='Helvetica Neue' ; ax.FontSize=11; ax.YAxisLocation = 'origin';ax.XTick = [ -20 0 15 30 45 60 100 200 250];legend('show');clear title;% 0 15 30 60 80 100 120 140 160 180 200 250
     title(['Global Mean Field Power  _time:' strrep(num2str(statwin),'  ','_')]); ylabel ('\muv'); xlabel ('miliseconds');
     legend([p1 p2],{strrep([ALLEEG(dataset(:,1)).setname ' n=' num2str(size(ALLEEG(dataset(:,1)).subjects,2))],'_',' '),...
         strrep([ALLEEG(dataset(:,2)).setname ' n=' num2str(size(ALLEEG(dataset(:,2)).subjects,2))],'_',' ')})
-    % ['ADHD  n=' num2str(size(corrsADHD(NnA,:),1))]
-    
+    ylim([min(get(gca,'YLim')) round(max([pp1.YData ; pp2.YData]))+1])
+    set(ax ,'Layer', 'Top')
     hold off;
     clearvars f p1 p2 ax
     % stats
@@ -282,22 +289,23 @@ end
 
 if strcmp(LMFPgrph,'on') %& size(elecnum,2)>1
     figfig1=figure('position', [500 200 600 400]); hold on;
-    patch([ALLEEG(dataset(:,1)).times(timeInd) fliplr(ALLEEG(dataset(:,1)).times(timeInd))],[LMFP(:,:,dataset(:,1))-LMFPste(:,:,dataset(:,1)) fliplr(LMFP(:,:,dataset(:,1))+LMFPste(:,:,dataset(:,1)))],color{dataset(:,1)},'EdgeColor',[color{dataset(:,1)}.*0.7],'LineWidth',0.2,'FaceVertexAlphaData',0.1,'FaceAlpha',0.3) %
+    pp1=patch([ALLEEG(dataset(:,1)).times(timeInd) fliplr(ALLEEG(dataset(:,1)).times(timeInd))],[LMFP(:,:,dataset(:,1))-LMFPste(:,:,dataset(:,1)) fliplr(LMFP(:,:,dataset(:,1))+LMFPste(:,:,dataset(:,1)))],color{dataset(:,1)},'EdgeColor',[color{dataset(:,1)}.*0.7],'LineWidth',0.2,'FaceVertexAlphaData',0.1,'FaceAlpha',0.3) %
     p1=plot(ALLEEG(dataset(:,1)).times(timeInd),LMFP(:,:,dataset(:,1)),'LineWidth',2);
     p1.Color=color{dataset(:,1)};
-    patch([ALLEEG(dataset(:,2)).times(timeInd) fliplr(ALLEEG(dataset(:,2)).times(timeInd))],[LMFP(:,:,dataset(:,2))-LMFPste(:,:,dataset(:,2)) fliplr(LMFP(:,:,dataset(:,2))+LMFPste(:,:,dataset(:,2)))],color{dataset(:,2)},'EdgeColor',[color{dataset(:,2)}.*0.7],'LineWidth',0.2,'FaceVertexAlphaData',0.1,'FaceAlpha',0.3)%,'FaceVertexAlphaData',0.1,'FaceAlpha',0.3
+    pp2=patch([ALLEEG(dataset(:,2)).times(timeInd) fliplr(ALLEEG(dataset(:,2)).times(timeInd))],[LMFP(:,:,dataset(:,2))-LMFPste(:,:,dataset(:,2)) fliplr(LMFP(:,:,dataset(:,2))+LMFPste(:,:,dataset(:,2)))],color{dataset(:,2)},'EdgeColor',[color{dataset(:,2)}.*0.7],'LineWidth',0.2,'FaceVertexAlphaData',0.1,'FaceAlpha',0.3)%,'FaceVertexAlphaData',0.1,'FaceAlpha',0.3
     p2=plot(ALLEEG(dataset(:,2)).times(timeInd),LMFP(:,:,dataset(:,2)),'LineWidth',2);
     p2.Color=color{dataset(:,2)};
     yy=max(get(gca,'YLim')); %yy=yy.*0.1+yy;
     f=fill([statwin statwin(2) statwin(1)],[yy yy 0 0],'-k','facealpha',.15,'edgecolor','none'); %'facealpha',.15,,'-k','LineWidth',2
     chH = get(gca,'Children');
     set(gca,'Children',[chH(2:end) ;chH(1)])
-    fb=fill([0 15 15 0],[yy yy 0 0],'w','edgecolor','none');
+    fb=fill([mintrim maxtrim maxtrim mintrim],[yy yy 0 0],'w','edgecolor','none');
     %axis([timeWin 0 amp]);
     ax=gca; ax.XAxisLocation='origin' ; ax.FontName='Helvetica Neue' ; ax.FontSize=11; ax.YAxisLocation = 'origin'; ax.XTick =[min(ax.XLim):50:max(ax.XLim)];% 0 15 30 60 80 100 120 140 160 180 200 250
     legend('show'); clear title; title(['Local Mean Field Power ' strjoin([elecname]) '  time:' strrep(num2str(statwin),'  ','_')], 'interpreter', 'none'); ylabel ('\muv'); xlabel ('miliseconds');
     legend([p1 p2],{strrep([ALLEEG(dataset(:,1)).setname ' n=' num2str(size(ALLEEG(dataset(:,1)).subjects,2))],'_',' '),...
     strrep([ALLEEG(dataset(:,2)).setname ' n=' num2str(size(ALLEEG(dataset(:,2)).subjects,2))],'_',' ')})
+    ylim([min(get(gca,'YLim')) round(max([pp1.YData ; pp2.YData]))+1])
     set(ax ,'Layer', 'Top')
     % ['ADHD  n=' num2str(size(corrsADHD(NnA,:),1))]
     hold off;
@@ -323,7 +331,9 @@ if strcmp(wavgrph,'on')
     p2.Color=color{dataset(:,2)};
     yy=max(get(gca,'YLim')); 
     yymin=min(get(gca,'YLim'));
-    fb=fill([0 25 25 0],[yy yy yymin yymin],'w','edgecolor','none');
+    chH = get(gca,'Children');
+    set(gca,'Children',[chH(2:end) ;chH(1)])
+    fb=fill([mintrim maxtrim maxtrim mintrim],[yy yy 0 0],'w','edgecolor','none');
     axis([timeWin -amp amp]);
     ax=gca;  ax.FontName='Helvetica Neue' ; ax.FontSize=11;  ax.XAxisLocation='origin' ;
     ax.YAxisLocation = 'origin';    ax.XTick = [ -20 0 15 30 45 60 100 200 250];
