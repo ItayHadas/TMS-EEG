@@ -203,8 +203,8 @@ EEG = eeg_checkset( EEG );
     EEG.data=double(EEG.data);
     %disreg=[-DoublePulseINT-350 350];
     %disreg_vec=EEG.times<disreg(1) | EEG.times>disreg(2); 
-[~, bc1] = min(abs(EEG.times-(-60)));
-[~, bc2] = min(abs(EEG.times-(-5)));
+[~, bc1] = min(abs(EEG.times-(-160)));
+[~, bc2] = min(abs(EEG.times-(-20)));
 %     [~, bp2] = min(abs(EEG.times-(disreg(2))));
 %     %disreg_vec=[[1:20:bp1] [bp2:20:size(EEG.times,2)]] ;
 %     [~, bp3] = min(abs(EEG.times));
@@ -271,6 +271,7 @@ EEG1.rejelecs={};
 
 if  isfield(EEG.chanlocs,'median_impedance')
     EEG1.rejelecs = unique( {EEG1.chanlocs([DROP]).labels EEG1.chanlocs(logical([EEG.chanlocs.median_impedance]>25)).labels} ) ;
+    EEG1.rejelecs_impedence ={EEG1.chanlocs(logical([EEG.chanlocs.median_impedance]>25)).labels}
 else
     EEG1.rejelecs = unique( {EEG1.chanlocs([DROP]).labels} ) ;
 end
@@ -281,22 +282,22 @@ end
 
 important=elecName(EEG1,imp);
 noimp=ones(1,size({EEG1.chanlocs.labels},2)); noimp(1,important)=0; noimp=logical(noimp); a=1:size(EEG1.data,1);aa= a(noimp);
-[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[0.3 6] );
+[~, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[0.3 6] );
 EEG1.rejelecs = unique( [{EEG1.chanlocs([aa(rejelecs)]).labels} EEG1.rejelecs] ) ;
 
 important=elecName(EEG1,imp);
 noimp=ones(1,size({EEG1.chanlocs.labels},2)); noimp(1,important)=0; noimp=logical(noimp); a=1:size(EEG1.data,1);aa= a(noimp);
-[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[58 62] );
+[~, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[58 62] );
 EEG1.rejelecs = unique( [{EEG1.chanlocs([aa(rejelecs)]).labels} EEG1.rejelecs] ) ;
 
 %with important channels
-[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size(EEG1.data,1)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[0.3 6] );
+[~, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size(EEG1.data,1)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[0.3 6] );
 EEG1.rejelecs = unique( [{EEG1.chanlocs([rejelecs]).labels} EEG1.rejelecs] ) ;
 
-[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size(EEG1.data,1)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[58 62] );
+[~, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size(EEG1.data,1)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[58 62] );
 EEG1.rejelecs = unique( [{EEG1.chanlocs([rejelecs]).labels} EEG1.rejelecs] ) ;
 
-[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size(EEG1.data,1)] ,'threshold',7,'norm','on','measure','prob');
+[~, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size(EEG1.data,1)] ,'threshold',6,'norm','on','measure','prob');
 EEG1.rejelecs = unique( [{EEG1.chanlocs([rejelecs]).labels} EEG1.rejelecs] ) ;
 
 
@@ -314,14 +315,12 @@ clear EEG1
     disp(['downsampling  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     
     if EEG.srate>1999
-    
-        %EEG = pop_resample(EEG, 1000);     
+    %EEG = pop_resample(EEG, 1000);     
     EEG=resample_NOfilt(EEG, 1000);
     end
 
     %    pop_eegplot( EEG, 1, 1, 1, {}, 'spacing', 70)
     mkdir([outdir '\DEC'])
-    %EEG = pop_saveset( EEG, [ '111.set']);
     EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'DEC\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
 %% Channel Interpolation - Better not to run at this stage
 %     disp(['Channel Interpolation  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
@@ -377,7 +376,16 @@ clear EEG1
     EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'ICA1\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
 %% removes 'decay' & line-noise ICA components
     disp(['ICA1 - Comps removal  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
-      EEG = ICAremDECAY(EEG);
+    
+    
+    if (contains(EEG.setname,'_RSP'))
+        ROI = {'F4' 'fpz' 'fp2' 'AF4' 'F12' 'FT12' 'F2' 'FT8' 'AF6' 'F8' 'FC8' 'FC6' 'F6' 'FC4' 'c4' 'c6' 't8' 'af8' 'afz' 'fz' 'fcz'};
+    elseif (contains(EEG.setname,'_RSP'))
+        ROI = {'F3' 'FP1' 'fpz' 'fp2' 'AF3' 'F11' 'FT11' 'F12' 'FT12' 'F1' 'FT7' 'AF5' 'F7' 'FC7' 'FC5' 'F5' 'FC3' 'c3' 'c5' 't7' 'af7' 'fpz' 'afz' 'fz' 'fcz'};
+
+    end
+
+    EEG = ICAremDECAY(EEG,ROI);
     minfreq=58; maxfreq=62;
     EEG = FFT_comp(EEG, minfreq, maxfreq);
  
@@ -390,7 +398,7 @@ clear EEG1
     EEG.data=double(EEG.data);
     %  pop_eegplot( EEG, 1, 1, 1);
     low=0.2;
-    high=80;
+    high=63;
     %ACTIVE_New_2WayFilter(1,48,0)
     EEG.data = FilterTEP(EEG.data, low, high,EEG.srate); % ,[1:size(EEG.data,1)],EEG.srate
     % FilterTEP(EEGdata, low, high,elecs,srate)

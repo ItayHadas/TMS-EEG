@@ -376,7 +376,15 @@ clear EEG1
     EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'ICA1\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
 %% removes 'decay' & line-noise ICA components
     disp(['ICA1 - Comps removal  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
-      EEG = ICAremDECAY(EEG);
+    
+    
+    if (contains(EEG.setname,'_RSP'))
+        ROI = {'F4' 'fpz' 'fp2' 'AF4' 'F12' 'FT12' 'F2' 'FT8' 'AF6' 'F8' 'FC8' 'FC6' 'F6' 'FC4' 'c4' 'c6' 't8' 'af8' 'afz' 'fz' 'fcz' 'FP2'};
+    elseif (contains(EEG.setname,'_RSP'))
+        ROI = {'F3' 'fpz' 'fp2' 'AF3' 'F11' 'FT11' 'F1' 'FT7' 'AF5' 'F7' 'FC7' 'FC5' 'F5' 'FC3' 'c3' 'c5' 't7' 'af7' 'afz' 'fz' 'fcz' 'FP1'};
+    end
+
+    EEG = ICAremDECAY(EEG,ROI);
     minfreq=58; maxfreq=62;
     EEG = FFT_comp(EEG, minfreq, maxfreq);
  
