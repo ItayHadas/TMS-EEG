@@ -240,27 +240,13 @@ if (contains(EEG.setname,'_RS'))
     imp={'fp1' 'fp2' 'fpz' 'fz' 'fc4' 'fc6' 'f4' 'f6'};
 end
 % imp={'fp1' 'fp2' 'fpz' 'c5' 'c3'}; this line is for motor stimulation
-% see if you can introduce triala by trial eeglab plugin
-EEG.data=double(EEG.data);
-EEG1=EEG;
-% pop_eegplot( EEG1, 1, 1, 1);
-if EEG1.srate>1999
-
-    rate=EEG1.srate/1000;
-    [~, ind_t0] = min(abs(EEG1.times-(0)));
-    T=EEG1.times;
-    Dd=[smoothdata(EEG1.data(:,[ind_t0-1]:-1:1,:),2,'movmean',rate) smoothdata(EEG.data(:,ind_t0:end,:),2,'movmean',rate)]; %movmean gaussian
-    EEG1.times=[]; EEG1.times= [flip(T(ind_t0:-rate:1)) T(ind_t0+rate:rate:end)];
-    EEG1.data=[]; EEG1.data=[flip(Dd(:,ind_t0:-rate:1,:),2) Dd(:,ind_t0+rate:rate:end,:)];
-    EEG1.srate=EEG1.srate/rate;
-    EEG1.pnts=size(EEG1.data,2);
-    EEG1 = eeg_checkset( EEG1 );
-    clear Dd
+% see if you can introduce trial by trial eeglab plugin
+if EEG.srate>1999
+EEG1=resample_NOfilt(EEG, 1000);
 end
 
-%     disreg=[-3 450];
 if contains(lower(fileName),'_pp')
-    disreg=[-DoublePulseINT-3 400];
+    disreg=[-DoublePulseINT-5 400];
 elseif contains(lower(fileName),'_sp')
     disreg=[-5 400];
 else
@@ -270,11 +256,11 @@ end
 [~, t1] = min(abs(EEG1.times-(disreg(1))));
 [~, t2] = min(abs(EEG1.times-(disreg(2))));
 %EEG1.times(t1:t2)=zeros(1,size(EEG1.times(t1:t2),2));
-EEG1.data(:,t1:t2,:)=zeros(size(EEG1.data,1),size(EEG1.data(t1:t2),2),size(EEG1.data,3));
+EEG1.data(:,t1:t2,:)=zeros(size(EEG1.data,1),size(EEG1.data(:,t1:t2,:),2),size(EEG1.data,3));
 EEG1.data=double(EEG1.data);
-EEG1.pnts=length(EEG1.times);
+%EEG1.pnts=length(EEG1.times);
 EEG1 = eeg_checkset( EEG1 );
-
+%pop_eegplot( EEG1, 1, 1, 1);
 %withOUT important channels
 
 EEG1.rejelecs={};
@@ -295,23 +281,22 @@ end
 
 important=elecName(EEG1,imp);
 noimp=ones(1,size({EEG1.chanlocs.labels},2)); noimp(1,important)=0; noimp=logical(noimp); a=1:size(EEG1.data,1);aa= a(noimp);
-
 [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[0.3 6] );
-EEG1.rejelecs = unique( [{EEG1.chanlocs([rejelecs]).labels} EEG1.rejelecs] ) ;
+EEG1.rejelecs = unique( [{EEG1.chanlocs([aa(rejelecs)]).labels} EEG1.rejelecs] ) ;
 
 important=elecName(EEG1,imp);
 noimp=ones(1,size({EEG1.chanlocs.labels},2)); noimp(1,important)=0; noimp=logical(noimp); a=1:size(EEG1.data,1);aa= a(noimp);
 [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[58 62] );
-EEG1.rejelecs = unique( [{EEG1.chanlocs([rejelecs]).labels} EEG1.rejelecs] ) ;
+EEG1.rejelecs = unique( [{EEG1.chanlocs([aa(rejelecs)]).labels} EEG1.rejelecs] ) ;
 
 %with important channels
-[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size({EEG1.chanlocs.labels},2)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[0.3 6] );
+[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size(EEG1.data,1)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[0.3 6] );
 EEG1.rejelecs = unique( [{EEG1.chanlocs([rejelecs]).labels} EEG1.rejelecs] ) ;
 
-[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size({EEG1.chanlocs.labels},2)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[58 62] );
+[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size(EEG1.data,1)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[58 62] );
 EEG1.rejelecs = unique( [{EEG1.chanlocs([rejelecs]).labels} EEG1.rejelecs] ) ;
 
-[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size({EEG1.chanlocs.labels},2)] ,'threshold',6,'norm','on','measure','prob');
+[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size(EEG1.data,1)] ,'threshold',7,'norm','on','measure','prob');
 EEG1.rejelecs = unique( [{EEG1.chanlocs([rejelecs]).labels} EEG1.rejelecs] ) ;
 
 
@@ -327,50 +312,13 @@ EEG.rejEpochs=rejepochs;
 clear EEG1
 %% downsampling
     disp(['downsampling  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
-    EEG.data=double(EEG.data);
-    if EEG.srate>1999
-    %EEG = pop_resample_NOfilt(EEG, 1000);
-        %EEG = pop_resample(EEG, 1000);     
-        freq=1000;
-        oldpnts  = EEG.pnts; preSrate=EEG.srate;
-        [p,rate] = rat(freq./preSrate, 1e-12); 
-        rate1=floor(rate./p);
-        [~, ind_t0] = min(abs(EEG.times-(0)));
-        T=EEG.times; %D=EEG.data;
-        Dd=[smoothdata(EEG.data(:,[ind_t0-1]:-1:1,:),2,'movmean',rate1) smoothdata(EEG.data(:,ind_t0:end,:),2,'movmean',rate1)]; %movmean gaussian
-        EEG.times=[]; EEG.times= [flip(T(ind_t0:-rate1:1)) T(ind_t0+rate1:rate1:end)];
-        EEG.data=[]; EEG.data=[flip(Dd(:,ind_t0:-rate1:1,:),2) Dd(:,ind_t0+rate1:rate1:end,:)];
-        EEG.srate=preSrate./rate1;
-        EEG.pnts=size(EEG.data,2);
-        EEG.xmax=EEG.xmin + (EEG.pnts-1)/EEG.srate;
-        EEG.times=linspace(EEG.xmin*1000, EEG.xmax*1000, EEG.pnts);
-        % recompute all event latencies
-        % -----------------------------
-        if isfield(EEG.event, 'latency')
-            if EEG.trials > 1
-                for iEvt = 1:length( EEG.event )
-                    EEG.event( iEvt ).latency = ( EEG.event( iEvt ).latency - ( EEG.event(iEvt).epoch - 1 ) * oldpnts - 1 ) * p / rate + ( EEG.event(iEvt).epoch - 1 ) * EEG.pnts + 1;
-                    if isfield(EEG.event, 'duration') && ~isempty(EEG.event(iEvt).duration)
-                        EEG.event( iEvt ).duration = EEG.event( iEvt ).duration * p/rate;
-                    end
-                end
-                
-            end
-        end
-        EEG.urevent=[];
-        if exist('evname')
-        EEG.urevent=EEG.event(strcmp({EEG.event.type},evname));
-        else
-          EEG.urevent=EEG.event(strcmp({EEG.event.type},'128')); 
-        end
-        if isfield(EEG.urevent, 'urevent'), EEG.urevent = rmfield(EEG.urevent, 'urevent'); end 
-        if isfield(EEG.urevent, 'epoch'), EEG.urevent = rmfield(EEG.urevent, 'epoch'); end 
-        
-        EEG = eeg_checkset(EEG, 'eventconsistency');
-        EEG = Z_append(EEG,'_Dec');
-        EEG = eeg_checkset( EEG );
-    end
     
+    if EEG.srate>1999
+    
+        %EEG = pop_resample(EEG, 1000);     
+    EEG=resample_NOfilt(EEG, 1000);
+    end
+
     %    pop_eegplot( EEG, 1, 1, 1, {}, 'spacing', 70)
     mkdir([outdir '\DEC'])
     %EEG = pop_saveset( EEG, [ '111.set']);
