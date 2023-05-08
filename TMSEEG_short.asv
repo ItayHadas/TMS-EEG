@@ -69,7 +69,7 @@ i=i+1
 %%
 channels= elecName(EEG,{'f3'}) %41  27 47 20
 
-components=[1 2 3 5 6 7 9 10 13];
+components=[1 2 3 5 6 7];
 %components= [ 1 2 ] % components= RejComp'
 %components= [find(EEG.reject.gcompreject)] %3     4     5     6     7     8     9    11    35
 comp='off';

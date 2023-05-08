@@ -34,6 +34,9 @@ drophigh=unique([drophigh find(zscore(elmed2)>9)]);
 drophigh=intersect(a(noeyes),drophigh);
 %drophigh= [drophigh find(zscore(elmed)>5)];
 
+
+
+
 % figure; plot(el); title('STD');
 % figure; plot(elm); title('Mean');
 % figure; plot(elmed); title('Median');
@@ -50,6 +53,8 @@ drophigh=intersect(a(noeyes),drophigh);
 %dropdead=[] %canceling the drop silent/DEAD channels
 % drophigh=drophigh(2:end);
 %DROP=[ dropNaN drophigh dropdead ]; %drophigh 
+% high impedence
+
 DROP=[  drophigh dropdead ]
 %EEG=pop_select(EEG,'nochannel', DROP);
 %clear c d DROP elmed

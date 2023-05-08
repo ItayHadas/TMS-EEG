@@ -58,10 +58,10 @@ for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
 % EEG = pop_saveset( EEG, [outdir EEG.setname]);
 %% quality check plots
 %  figure; topoplot([],EEG.chanlocs, 'style', 'blank',  'electrodes', 'labelpoint', 'chaninfo', EEG.chaninfo);
-%  pop_eegplot( EEG, 1, 1, 1);
+%  pop_eegplot( EEG1, 1, 1, 1);
 %  figure; pop_spectopo(EEG, 1, [-200  500], 'EEG' , 'percent', 50, 'freq', [6 10 22 45], 'freqrange',[2 60],'electrodes','off');
 % figure; plot(EEG.times,squeeze(EEG.data(elecName(EEG,{'Oz'}),:)))
-%%  fix chanlocs - (change back to regular chanlocs!)
+%% fix chanlocs - (change back to regular chanlocs!)
     %disp(['Fix Chanlocs  - dataset ' num2str(i) '/' num2str(size(fileNames,1))])
 %   default TEMERTY cap
 %   EEG=pop_chanedit(EEG, 'lookup','d:\\Google_Drive\\MATLAB\\EEGLAB\\plugins\\dipfit\\standard_BEM\\elec\\standard_1005.elc');
@@ -92,7 +92,7 @@ for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
  
     % removing other channels that do not apear in the chanlocs files
    % EEG = pop_select( EEG,'nochannel',{EEG.chanlocs(~ismember({EEG.chanlocs.labels},{chanlocs62.labels})).labels});
-%%    Check for bridged electrodes (just for Quality Check)
+%% Check for bridged electrodes (just for Quality Check)
 %     disp(['check for bridged electrodes  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
 %     EEG1=EEG;
 %     
@@ -120,6 +120,9 @@ for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     method=1;
     DoublePulseINT=0; % paired-pulse interval, Zero (0) in case of single pulse
     [impotant, ~]=elecName(EEG,{'f5' 'f3' 'f1' 'fc5' 'fc3' 'fc1' 'fcz' 'fc2' 'c1' 'cz' 'c2' 'c4' 'c6' 'cp5' 'cp3'});
+    if (contains(EEG.setname,'_RS'))
+        [impotant, ~]=elecName(EEG,{'f6' 'f4' 'f2' 'fc6' 'fc4' 'fc1' 'fcz' 'fc2' 'c1' 'cz' 'c2' 'c4' 'c6' 'cp5' 'cp3'});
+    end
 % [impotant, ~]=elecName(EEG,{'f5' 'f3' 'fc5' 'fc3' 'fc4' 'fc6' 'f4' 'f6' 'cz' 'fcz'});
 % [impotant ~]=elecName(EEG,{ 'fc5' 'fc3' });
 % impotant=[7 8 9 16 17 18 ]; %region of stimulation 25 26 27
@@ -146,12 +149,16 @@ EEG = eeg_checkset( EEG );
     %   EEG = pop_epoch( EEG, {'R128'}, [-1.3 1.3]);
     EEG = Z_append(EEG,'_Epo');
     EEG = eeg_checkset( EEG );
-    if size(size(EEG.data),2)==2
+    if size(size(EEG.data),2)<3
         error('epoching unsucsseful')
     return
     else
         disp(['Epoching  - sucsessful ' num2str(i) '/' num2str(size(fileNames,1))]);
     end
+    mkdir([outdir '\EPO'])
+    %EEG = pop_saveset( EEG, [ '111.set']);
+    EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'EPO\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+
 %%
     % figure; plot(EEG.times,squeeze(mean(EEG.data(elecName(EEG,{'f3'}),:,[50:80]),3)))
      % figure; plot(EEG.times,squeeze(mean(EEG.data(elecName(EEG,{'f3'}),:,1:100),3)))
@@ -226,88 +233,98 @@ EEG = eeg_checkset( EEG );
     %EEG = pop_saveset( EEG, [outdir '\DEC\' EEG.filename]);
    % EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'detrend\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
 %% remove bad channels
-    disp(['remove bad channels  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
-    
-    imp={'fp1' 'fp2' 'fpz' 'fc3' 'fc5' 'f3' 'f5'};
-    % imp={'fp1' 'fp2' 'fpz' 'c5' 'c3'}; this line is for motor stimulation
-    % see if you can introduce triala by trial eeglab plugin
-    EEG.data=double(EEG.data);
-    EEG1=EEG;
-      % pop_eegplot( EEG1, 1, 1, 1);
-    if EEG1.srate>1999
-        
-        rate=EEG1.srate/1000;
-        [~, ind_t0] = min(abs(EEG1.times-(0)));
-        T=EEG1.times; 
-        Dd=[smoothdata(EEG1.data(:,[ind_t0-1]:-1:1,:),2,'movmean',rate) smoothdata(EEG.data(:,ind_t0:end,:),2,'movmean',rate)]; %movmean gaussian
-        EEG1.times=[]; EEG1.times= [flip(T(ind_t0:-rate:1)) T(ind_t0+rate:rate:end)];
-        EEG1.data=[]; EEG1.data=[flip(Dd(:,ind_t0:-rate:1,:),2) Dd(:,ind_t0+rate:rate:end,:)];
-        EEG1.srate=EEG1.srate/rate;
-        EEG1.pnts=size(EEG1.data,2);
-        EEG1 = eeg_checkset( EEG1 );
-    clear Dd
-    end
-    
-%     disreg=[-3 450];
-%     if contains(lower(fileName),'_pp')
-        disreg=[-DoublePulseINT-3 450];
-%     elseif contains(lower(fileName),'_sp')
-%         disreg=[-3 450];
-%     else
-%         
-%     end
-    
-    [~, t1] = min(abs(EEG1.times-(disreg(1))));
-    [~, t2] = min(abs(EEG1.times-(disreg(2))));
-    EEG1.times(t1:t2)=[];
-    EEG1.data(:,t1:t2,:)=[];
-    EEG1.data=double(EEG1.data);
-    EEG1.pnts=length(EEG1.times);
+disp(['remove bad channels  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
+
+imp={'fp1' 'fp2' 'fpz' 'fz' 'fc3' 'fc5' 'f3' 'f5'};
+if (contains(EEG.setname,'_RS'))
+    imp={'fp1' 'fp2' 'fpz' 'fz' 'fc4' 'fc6' 'f4' 'f6'};
+end
+% imp={'fp1' 'fp2' 'fpz' 'c5' 'c3'}; this line is for motor stimulation
+% see if you can introduce triala by trial eeglab plugin
+EEG.data=double(EEG.data);
+EEG1=EEG;
+% pop_eegplot( EEG1, 1, 1, 1);
+if EEG1.srate>1999
+
+    rate=EEG1.srate/1000;
+    [~, ind_t0] = min(abs(EEG1.times-(0)));
+    T=EEG1.times;
+    Dd=[smoothdata(EEG1.data(:,[ind_t0-1]:-1:1,:),2,'movmean',rate) smoothdata(EEG.data(:,ind_t0:end,:),2,'movmean',rate)]; %movmean gaussian
+    EEG1.times=[]; EEG1.times= [flip(T(ind_t0:-rate:1)) T(ind_t0+rate:rate:end)];
+    EEG1.data=[]; EEG1.data=[flip(Dd(:,ind_t0:-rate:1,:),2) Dd(:,ind_t0+rate:rate:end,:)];
+    EEG1.srate=EEG1.srate/rate;
+    EEG1.pnts=size(EEG1.data,2);
     EEG1 = eeg_checkset( EEG1 );
-    
-    %withOUT important channels
-    
-    EEG1.rejelecs={};
-    important=elecName(EEG,imp);
-    noimp=ones(1,size({EEG1.chanlocs.labels},2)); noimp(1,important)=0; noimp=logical(noimp); a=1:size(EEG1.data,1);aa= a(noimp);
-    chans=EEG1.chanlocs;
-    [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[0.3 6] );
-    EEG1.rejelecs={chans([aa(rejelecs)]).labels};
-    
-    important=elecName(EEG,imp);
-    noimp=ones(1,size({EEG1.chanlocs.labels},2)); noimp(1,important)=0; noimp=logical(noimp); a=1:size(EEG1.data,1);aa= a(noimp);
-    chans=EEG1.chanlocs;
-    [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[58 62] );
-    EEG1.rejelecs=[EEG1.rejelecs chans([aa(rejelecs)]).labels];
-    %with important channels
-    chans=EEG1.chanlocs;
-    [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size({EEG1.chanlocs.labels},2)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[0.3 6] );
-    EEG1.rejelecs=[EEG1.rejelecs chans([rejelecs]).labels];
-    
-    chans=EEG1.chanlocs;
-    [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size({EEG1.chanlocs.labels},2)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[58 62] );
-    EEG1.rejelecs=[EEG1.rejelecs chans([rejelecs]).labels];
-    
-    chans=EEG1.chanlocs;
-    [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size({EEG1.chanlocs.labels},2)] ,'threshold',6,'norm','on','measure','prob');
-    EEG1.rejelecs=[EEG1.rejelecs chans([rejelecs]).labels];
-    
-    % remove bad channels: dead chennels
-    % check std of entire recording
-    [DROP,  dropNaN, dropdead, drophigh] = dropOFFchan( EEG1 );
-    EEG1.rejelecs=[EEG1.rejelecs chans([DROP]).labels];
-    
-    
-    %     impchan=ismember(lower(imp),lower(EEG1.rejelecs));
-    %     EEG.rejimpchan=imp(impchan);
-    %     EEG.rejElecs=EEG1.rejelecs;
-    EEG = pop_select( EEG,'nochannel',EEG1.rejelecs);
-    EEG.rejelecs=EEG1.rejelecs;
-    %pop_eegplot( EEG, 1, 1, 1);
-    [EEG, rejepochs] = pop_autorej(EEG, 'nogui','on','eegplot','off');
-    EEG.rejEpochs=rejepochs;
-    
-    clear EEG1
+    clear Dd
+end
+
+%     disreg=[-3 450];
+if contains(lower(fileName),'_pp')
+    disreg=[-DoublePulseINT-3 400];
+elseif contains(lower(fileName),'_sp')
+    disreg=[-5 400];
+else
+    disreg=[-5 400];
+end
+
+[~, t1] = min(abs(EEG1.times-(disreg(1))));
+[~, t2] = min(abs(EEG1.times-(disreg(2))));
+%EEG1.times(t1:t2)=zeros(1,size(EEG1.times(t1:t2),2));
+EEG1.data(:,t1:t2,:)=zeros(size(EEG1.data,1),size(EEG1.data(t1:t2),2),size(EEG1.data,3));
+EEG1.data=double(EEG1.data);
+EEG1.pnts=length(EEG1.times);
+EEG1 = eeg_checkset( EEG1 );
+
+%withOUT important channels
+
+EEG1.rejelecs={};
+% remove bad channels: dead chennels
+% check std of entire recording DROP=[2 3 4]
+[DROP,  dropNaN, dropdead, drophigh] = dropOFFchan( EEG1 );
+%EEG1.rejelecs=[EEG1.chanlocs([DROP]).labels];
+
+if  isfield(EEG.chanlocs,'median_impedance')
+    EEG1.rejelecs = unique( {EEG1.chanlocs([DROP]).labels EEG1.chanlocs(logical([EEG.chanlocs.median_impedance]>25)).labels} ) ;
+else
+    EEG1.rejelecs = unique( {EEG1.chanlocs([DROP]).labels} ) ;
+end
+%     impchan=ismember(lower(imp),lower(EEG1.rejelecs));
+%     EEG.rejimpchan=imp(impchan);
+%     EEG.rejElecs=EEG1.rejelecs;
+%EEG1 = pop_select( EEG1,'nochannel',EEG1.rejelecs);
+
+important=elecName(EEG1,imp);
+noimp=ones(1,size({EEG1.chanlocs.labels},2)); noimp(1,important)=0; noimp=logical(noimp); a=1:size(EEG1.data,1);aa= a(noimp);
+
+[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[0.3 6] );
+EEG1.rejelecs = unique( [{EEG1.chanlocs([rejelecs]).labels} EEG1.rejelecs] ) ;
+
+important=elecName(EEG1,imp);
+noimp=ones(1,size({EEG1.chanlocs.labels},2)); noimp(1,important)=0; noimp=logical(noimp); a=1:size(EEG1.data,1);aa= a(noimp);
+[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[58 62] );
+EEG1.rejelecs = unique( [{EEG1.chanlocs([rejelecs]).labels} EEG1.rejelecs] ) ;
+
+%with important channels
+[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size({EEG1.chanlocs.labels},2)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[0.3 6] );
+EEG1.rejelecs = unique( [{EEG1.chanlocs([rejelecs]).labels} EEG1.rejelecs] ) ;
+
+[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size({EEG1.chanlocs.labels},2)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[58 62] );
+EEG1.rejelecs = unique( [{EEG1.chanlocs([rejelecs]).labels} EEG1.rejelecs] ) ;
+
+[EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size({EEG1.chanlocs.labels},2)] ,'threshold',6,'norm','on','measure','prob');
+EEG1.rejelecs = unique( [{EEG1.chanlocs([rejelecs]).labels} EEG1.rejelecs] ) ;
+
+
+%     impchan=ismember(lower(imp),lower(EEG1.rejelecs));
+%     EEG.rejimpchan=imp(impchan);
+%     EEG.rejElecs=EEG1.rejelecs;
+EEG = pop_select( EEG,'nochannel',EEG1.rejelecs);
+EEG.rejelecs=EEG1.rejelecs;
+%pop_eegplot( EEG, 1, 1, 1);
+[EEG, rejepochs] = pop_autorej(EEG, 'nogui','on','eegplot','off');
+EEG.rejEpochs=rejepochs;
+
+clear EEG1
 %% downsampling
     disp(['downsampling  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     EEG.data=double(EEG.data);
@@ -403,7 +420,7 @@ EEG = eeg_checkset( EEG );
  %EEG = pop_runica(EEG, 'icatype','fastica','verbose','off');
     %EEG = pop_runica(EEG,'icatype','binica', 'extended',1,'interupt','on','pca',size(EEG.data,1) ); % 
     %EEG = pop_runica(EEG,'icatype','fastica','approach','symm','g','tanh','stabilization','on');
-    EEG = pop_runica(EEG, 'icatype', 'picard', 'maxiter',500); %,'mode','standard';
+    EEG = pop_runica(EEG, 'icatype', 'picard','m',12 , 'maxiter',700); %,'mode','standard';
     %save data
     % create ICA folder
     EEG = Z_append(EEG,'_ICA1');
@@ -412,26 +429,10 @@ EEG = eeg_checkset( EEG );
     EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'ICA1\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
 %% removes 'decay' & line-noise ICA components
     disp(['ICA1 - Comps removal  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
-    % remove TMS decay-artefatcs automatically and save data as  *rmDecay.setpathName
-    % outdir='D:\WORKINGset-D\ECT\PRE_SP\'
-    
-    EEG = ICAremDECAY(EEG);
+      EEG = ICAremDECAY(EEG);
     minfreq=58; maxfreq=62;
     EEG = FFT_comp(EEG, minfreq, maxfreq);
-    
-%     Threshblink=3; % TESA blink component detection threshold
-%     Threshmove=3; % TESA lateral eye movment component detection threshold
-%     compremove=3; %max components to remove (even if tesa detected larger number of components)
-%     blinkelec={'Fp1','Fp2'};
-%     latelec={'F7','F8'};
-%     [EEG, varsPerc] = tesa_sortcomps(EEG);
-%     [EEG]  = tesa_compselect( EEG,'compCheck','off','comps',[],'tmsMuscle','off','blink','on','blinkThresh',Threshblink,'blinkElecs',blinkelec,'move','on','moveThresh',Threshmove,'moveElecs',latelec,'muscle','off','elecNoise','off');
-%     
-    
-    mkdir([ '\removed_comps_ICA1'])
-    %EEG = pop_saveset( EEG, [ 'removed_comps_ICA1\' EEG.filename]);
-   EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([ 'removed_comps_ICA1\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
-   % EEG = pop_loadset( 'D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\removed_comps_ICA1\WEL017_SPD_BL_Epo_Dec_interp_ICA1_EXP_NOfreq.set');
+ 
    % figure; plot(EEG.times,squeeze(mean(EEG.data(elecName(EEG,{'f3'}),:,[50:80]),3)))
      % figure; plot(EEG.times,squeeze(mean(EEG.data(elecName(EEG,{'f3'}),:,1:100),3)))
      % [~, c1] = min(abs(EEG.times-(-50)));[~, c2] = min(abs(EEG.times-(301)));%
@@ -446,7 +447,7 @@ EEG = eeg_checkset( EEG );
     EEG.data = FilterTEP(EEG.data, low, high,EEG.srate); % ,[1:size(EEG.data,1)],EEG.srate
     % FilterTEP(EEGdata, low, high,elecs,srate)
      %     pop_comperp( EEG, 1, [1],[],'tlim',[1:450],'chans',[ 1:size(EEG.chanlocs,2)],'addavg','off','addstd','off','addall','on','diffavg','off','diffstd','off','tplotopt',{'ydir' 1});
-%     export_fig demo22.pdf -q101 -painters -append
+
 %plot(EEG.times,EEG.data(15,:,20))
     %EEG = Z_append(EEG,'_pruned1_filt');
     %EEG = pop_saveset( EEG, [ EEG.filename]);
@@ -457,9 +458,7 @@ EEG = eeg_checkset( EEG );
     % EEG = pop_reref(EEG, []);
 %% DeTrending Epochs Second time
     disp(['Detrending Epochs  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
-    
     EEG.data=double(EEG.data);
-    
     for elecc=1:size(EEG.data,1)
         for epoo=1:size(EEG.data,3)
             EEG.data(elecc,:,epoo)=detrend(double(EEG.data(elecc,:,epoo)),1);
@@ -478,22 +477,20 @@ EEG = eeg_checkset( EEG );
     EEG  = eeg_checkset( EEG );
     
     %    pop_eegplot( EEG, 1, 1, 1, {}, 'spacing', 70)
-    %% ICA2
+%% ICA2
     disp(['ICA2  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     EEG.data=double(EEG.data);
     %EEG = pop_runica(EEG, 'lrate', 0.0001, 'extended',1, 'interupt','off','verbose','off');
     %EEG = pop_runica(EEG,'icatype','fastica','approach','symm','g','tanh','stabilization','on');.
-     EEG = pop_runica(EEG, 'icatype', 'picard', 'maxiter',500); %,'mode','standard';
+    EEG = pop_runica(EEG, 'icatype', 'picard','m',12 , 'maxiter',700); %,'mode','standard';
    % EEG = pop_runica(EEG,'icatype','binica','extended',1,'verbose','off')
-    %save data
-    % create ICA folder
     EEG = Z_append(EEG,'_ICA2');
-    mkdir([ '\ICA2'])
+    mkdir([outdir '\ICA2'])
    % EEG = pop_saveset( EEG, [ 'ICA2\' EEG.filename]);
-     EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([ 'ICA2\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+   EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'ICA2\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
      %    pop_eegplot( EEG, 1, 1, 1, {}, 'spacing', 70)
-    %% Clear
-    clearvars -except chanlocs i fileNames pathName
+%% Clear
+    clearvars -except chanlocs i fileNames pathName Path outdir
 end 
 %% FIGURES - QUALITY CHECK
 % pathName='D:\Google_Drive\PhD Zangen\ADHD\EEGLAB GRANDS BACKUP\TEP - 15ms\';
