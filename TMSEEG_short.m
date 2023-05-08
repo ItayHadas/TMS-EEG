@@ -7,7 +7,7 @@ for i=1: size(fileNames,1)
     disp(['***************  dataset ' num2str(i) '/' num2str(size(fileNames,1)) '  **************']);
     fileName=fileNames{i};
     EEG = pop_loadset( [pathName fileName]);
-    trim=[-2 20]; %DoublePulseINT=0 % trim=[-2 5];
+    trim=[-2 15]; %DoublePulseINT=0 % trim=[-2 5];
     EEG = Triminterp(EEG,trim);
     base=[-200   -20];
     EEG  = pop_rmbase( EEG, base );

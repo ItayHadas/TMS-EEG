@@ -403,7 +403,7 @@ EEG = eeg_checkset( EEG );
  %EEG = pop_runica(EEG, 'icatype','fastica','verbose','off');
     %EEG = pop_runica(EEG,'icatype','binica', 'extended',1,'interupt','on','pca',size(EEG.data,1) ); % 
     %EEG = pop_runica(EEG,'icatype','fastica','approach','symm','g','tanh','stabilization','on');
-    EEG = pop_runica(EEG, 'icatype', 'picard', 'maxiter',500); %,'mode','standard';
+    EEG = pop_runica(EEG, 'icatype', 'picard','m',12 , 'maxiter',700); %,'mode','standard';
     %save data
     % create ICA folder
     EEG = Z_append(EEG,'_ICA1');
@@ -483,7 +483,7 @@ EEG = eeg_checkset( EEG );
     EEG.data=double(EEG.data);
     %EEG = pop_runica(EEG, 'lrate', 0.0001, 'extended',1, 'interupt','off','verbose','off');
     %EEG = pop_runica(EEG,'icatype','fastica','approach','symm','g','tanh','stabilization','on');.
-     EEG = pop_runica(EEG, 'icatype', 'picard', 'maxiter',500); %,'mode','standard';
+    EEG = pop_runica(EEG, 'icatype', 'picard','m',12 , 'maxiter',700); %,'mode','standard';
    % EEG = pop_runica(EEG,'icatype','binica','extended',1,'verbose','off')
     %save data
     % create ICA folder
