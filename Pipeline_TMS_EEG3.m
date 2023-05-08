@@ -186,11 +186,9 @@ EEG = eeg_checkset( EEG );
     end
    
     %pop_eegplot( EEG, 1, 1, 1);
-    mkdir([outdir '\Trimed'])
+    %mkdir([outdir '\Trimed'])
     %EEG = pop_saveset( EEG, [outdir '\DEC\' EEG.filename]);
     %EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'Trimed\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
-    EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'Trimed\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
-
 %% DeTrending Epochs (also baseline correct)
     disp(['Detrending Epochs  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     % EEG = pop_loadset( ['D:\WORDKINGset_D\Optimal_targetting_SP\Epoched\OT_017_OJB3_1MV_SP_MASKING_Epo.set']);
@@ -273,7 +271,7 @@ EEG = eeg_checkset( EEG );
     important=elecName(EEG,imp);
     noimp=ones(1,size({EEG1.chanlocs.labels},2)); noimp(1,important)=0; noimp=logical(noimp); a=1:size(EEG1.data,1);aa= a(noimp);
     chans=EEG1.chanlocs;
-    [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[0.5 6] );
+    [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[0.3 6] );
     EEG1.rejelecs={chans([aa(rejelecs)]).labels};
     
     important=elecName(EEG,imp);
@@ -283,7 +281,7 @@ EEG = eeg_checkset( EEG );
     EEG1.rejelecs=[EEG1.rejelecs chans([aa(rejelecs)]).labels];
     %with important channels
     chans=EEG1.chanlocs;
-    [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size({EEG1.chanlocs.labels},2)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[1 6] );
+    [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size({EEG1.chanlocs.labels},2)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[0.3 6] );
     EEG1.rejelecs=[EEG1.rejelecs chans([rejelecs]).labels];
     
     chans=EEG1.chanlocs;
@@ -430,9 +428,9 @@ EEG = eeg_checkset( EEG );
 %     [EEG]  = tesa_compselect( EEG,'compCheck','off','comps',[],'tmsMuscle','off','blink','on','blinkThresh',Threshblink,'blinkElecs',blinkelec,'move','on','moveThresh',Threshmove,'moveElecs',latelec,'muscle','off','elecNoise','off');
 %     
     
-    mkdir([ '\removed_comps_ICA1'])
+   % mkdir([ '\removed_comps_ICA1'])
     %EEG = pop_saveset( EEG, [ 'removed_comps_ICA1\' EEG.filename]);
-   EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([ 'removed_comps_ICA1\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+  % EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([ 'removed_comps_ICA1\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
    % EEG = pop_loadset( 'D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\removed_comps_ICA1\WEL017_SPD_BL_Epo_Dec_interp_ICA1_EXP_NOfreq.set');
    % figure; plot(EEG.times,squeeze(mean(EEG.data(elecName(EEG,{'f3'}),:,[50:80]),3)))
      % figure; plot(EEG.times,squeeze(mean(EEG.data(elecName(EEG,{'f3'}),:,1:100),3)))
@@ -480,7 +478,7 @@ EEG = eeg_checkset( EEG );
     EEG  = eeg_checkset( EEG );
     
     %    pop_eegplot( EEG, 1, 1, 1, {}, 'spacing', 70)
-    %% ICA2
+%% ICA2
     disp(['ICA2  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     EEG.data=double(EEG.data);
     %EEG = pop_runica(EEG, 'lrate', 0.0001, 'extended',1, 'interupt','off','verbose','off');
@@ -490,12 +488,12 @@ EEG = eeg_checkset( EEG );
     %save data
     % create ICA folder
     EEG = Z_append(EEG,'_ICA2');
-    mkdir([ '\ICA2'])
+    mkdir([outdir '\ICA2'])
    % EEG = pop_saveset( EEG, [ 'ICA2\' EEG.filename]);
-     EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([ 'ICA2\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+   EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'ICA2\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
      %    pop_eegplot( EEG, 1, 1, 1, {}, 'spacing', 70)
-    %% Clear
-    clearvars -except chanlocs i fileNames pathName
+%% Clear
+    clearvars -except chanlocs i fileNames pathName Path outdir
 end 
 %% FIGURES - QUALITY CHECK
 % pathName='D:\Google_Drive\PhD Zangen\ADHD\EEGLAB GRANDS BACKUP\TEP - 15ms\';

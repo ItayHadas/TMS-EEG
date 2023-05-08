@@ -46,6 +46,7 @@ end
 %% remove comps
 clear all
 pathi='D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\';
+pathi='A:\WorkingSet\suicidality_TEP\ICA2\';
 [fileNames, pathName]=Z_getSetsFileNames('set',pathi);
 i=0
 %for i=1: size(fileNames,1) 

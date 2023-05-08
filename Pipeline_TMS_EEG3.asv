@@ -186,11 +186,9 @@ EEG = eeg_checkset( EEG );
     end
    
     %pop_eegplot( EEG, 1, 1, 1);
-    mkdir([outdir '\Trimed'])
+    %mkdir([outdir '\Trimed'])
     %EEG = pop_saveset( EEG, [outdir '\DEC\' EEG.filename]);
     %EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'Trimed\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
-    EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'Trimed\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
-
 %% DeTrending Epochs (also baseline correct)
     disp(['Detrending Epochs  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     % EEG = pop_loadset( ['D:\WORDKINGset_D\Optimal_targetting_SP\Epoched\OT_017_OJB3_1MV_SP_MASKING_Epo.set']);
@@ -273,7 +271,7 @@ EEG = eeg_checkset( EEG );
     important=elecName(EEG,imp);
     noimp=ones(1,size({EEG1.chanlocs.labels},2)); noimp(1,important)=0; noimp=logical(noimp); a=1:size(EEG1.data,1);aa= a(noimp);
     chans=EEG1.chanlocs;
-    [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[1 6] );
+    [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',aa ,'threshold',2.5,'norm','on','measure','spec','freqrange',[0.3 6] );
     EEG1.rejelecs={chans([aa(rejelecs)]).labels};
     
     important=elecName(EEG,imp);
@@ -283,7 +281,7 @@ EEG = eeg_checkset( EEG );
     EEG1.rejelecs=[EEG1.rejelecs chans([aa(rejelecs)]).labels];
     %with important channels
     chans=EEG1.chanlocs;
-    [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size({EEG1.chanlocs.labels},2)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[1 6] );
+    [EEG1, rejelecs] = pop_rejchan(EEG1, 'elec',[1:size({EEG1.chanlocs.labels},2)] ,'threshold',3.5,'norm','on','measure','spec','freqrange',[0.3 6] );
     EEG1.rejelecs=[EEG1.rejelecs chans([rejelecs]).labels];
     
     chans=EEG1.chanlocs;
@@ -361,19 +359,19 @@ EEG = eeg_checkset( EEG );
     %EEG = pop_saveset( EEG, [ '111.set']);
     EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'DEC\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
 %% Channel Interpolation - Better not to run at this stage
-    disp(['Channel Interpolation  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
-    EEG = pop_interp(EEG, chanlocs62, 'spherical');
-%   EEG = pop_chanedit(EEG, 'lookup','E:\\Google_Drive\\MATLAB\\EEGLAB\\plugins\\dipfit2.3\\standard_BEM\\elec\\standard_1005.elc');
-    remove_channels2= {'VEO' 'HEO' 'EKG' 'EMG' 'EOG' 'HL 1' 'HL 2' 'Trigger'}; %'TP9' 'TP10' 'CB1' 'CB2' 'M1' 'M2' 
-    EEG = pop_select( EEG,'nochannel',remove_channels2);
-    EEG = Z_append(EEG,'_interp');
-    EEG = eeg_checkset( EEG );
-    mkdir([outdir '\interp'])
-    EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'interp\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
-    % EEG = pop_saveset( EEG, 'filename','111.set','filepath',strrep([outdir 'interp\'],'\','\\'));
-    %EEG = pop_saveset( EEG, 'filename','111.set','filepath','D:\\WORDKINGset_D\\Optimal_targetting_SP\\interp\\');
-    % EEG = pop_loadset( ['D:\WORDKINGset_D\Optimal_targetting_SP\interp\OBJ3_OT18_1mv_SP_MASKING_Epo_Dec_interp.set']);
-    %pop_eegplot( EEG, 1, 1, 1);
+%     disp(['Channel Interpolation  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
+%     EEG = pop_interp(EEG, chanlocs62, 'spherical');
+% %   EEG = pop_chanedit(EEG, 'lookup','E:\\Google_Drive\\MATLAB\\EEGLAB\\plugins\\dipfit2.3\\standard_BEM\\elec\\standard_1005.elc');
+%     remove_channels2= {'VEO' 'HEO' 'EKG' 'EMG' 'EOG' 'HL 1' 'HL 2' 'Trigger'}; %'TP9' 'TP10' 'CB1' 'CB2' 'M1' 'M2' 
+%     EEG = pop_select( EEG,'nochannel',remove_channels2);
+%     EEG = Z_append(EEG,'_interp');
+%     EEG = eeg_checkset( EEG );
+%     mkdir([outdir '\interp'])
+%     EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'interp\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+%     % EEG = pop_saveset( EEG, 'filename','111.set','filepath',strrep([outdir 'interp\'],'\','\\'));
+%     %EEG = pop_saveset( EEG, 'filename','111.set','filepath','D:\\WORDKINGset_D\\Optimal_targetting_SP\\interp\\');
+%     % EEG = pop_loadset( ['D:\WORDKINGset_D\Optimal_targetting_SP\interp\OBJ3_OT18_1mv_SP_MASKING_Epo_Dec_interp.set']);
+%     %pop_eegplot( EEG, 1, 1, 1);
 %% Baseline correction
     disp(['Baseline correction  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     base=[-200   -20]; %  base=[-200   -20];
