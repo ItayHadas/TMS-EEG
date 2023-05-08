@@ -1,5 +1,8 @@
 clear all
-[fileNames, pathName]=Z_getSetsFileNames('cdt');
+%[fileNames, pathName]=Z_getSetsFileNames('cdt');
+outdir='A:\WorkingSet\suicidality_TEP\' %pathName
+Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Suicidality_801566\Neurophysiology_Data\**\*SPD_*.cdt');
+fileNames={Path.name}';
 % [fileNames, pathName]=Z_getSetsFileNames('set');
 %  pathName='D:\WORDKINGset_D\SARA_theta_jittered_data\'
 %  chanlocs62=load('E:\Google_Drive\MATLAB\LAB_MatlabScripts\Chanlocs_64Ch-EasyCap_for_BrainAmp_AFz_FCz.mat');
@@ -14,6 +17,8 @@ for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
 %% loading the files
     
     fileName=fileNames{i};
+    %fileName=Path(i).name;
+    pathName=[Path(i).folder '\'];
 % pathName='X:\TEMERTY\MDD_ECT_rTMS\rTMS\EEG_data\MDD266\PRE\';
 % fileName='MDD266_PRE_TMS_DLPFC_SP2.cnt dec.cnt'
     if   strcmpi(fileName(:,end-2:end),'set')
@@ -50,12 +55,12 @@ for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     EEG = eeg_checkset( EEG );
     % 
      disp(['Dataset is loaded ' num2str(i) '/' num2str(size(fileNames,1))])
-% EEG = pop_saveset( EEG, [pathName EEG.setname]);
+% EEG = pop_saveset( EEG, [outdir EEG.setname]);
 %% quality check plots
 %  figure; topoplot([],EEG.chanlocs, 'style', 'blank',  'electrodes', 'labelpoint', 'chaninfo', EEG.chaninfo);
 %  pop_eegplot( EEG, 1, 1, 1);
 %  figure; pop_spectopo(EEG, 1, [-200  500], 'EEG' , 'percent', 50, 'freq', [6 10 22 45], 'freqrange',[2 60],'electrodes','off');
-% figure; plot(EEG.times,squeeze(mean(EEG.data(elecName(EEG,{'f3'}),:)]),3)))
+% figure; plot(EEG.times,squeeze(EEG.data(elecName(EEG,{'Oz'}),:)))
 %%  fix chanlocs - (change back to regular chanlocs!)
     %disp(['Fix Chanlocs  - dataset ' num2str(i) '/' num2str(size(fileNames,1))])
 %   default TEMERTY cap
@@ -167,11 +172,11 @@ EEG = eeg_checkset( EEG );
 % [~,~,loc]=histcounts(EEG.times,edges);
 % meany = accumarray(loc(:),y(:))./accumarray(loc(:),1);
 % xmid = 0.5*(edges(1:end-1)+edges(2:end));
-%     mkdir([pathName '\Epoched'])
-%     %EEG = pop_saveset( EEG, [pathName '\Epoched\' EEG.filename]);
+%     mkdir([outdir '\Epoched'])
+%     %EEG = pop_saveset( EEG, [outdir '\Epoched\' EEG.filename]);
 %     EEG = pop_saveset( EEG, 'filename','222.set','check', 'on','savemode','onefile','version','7.3');
 
-%     EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([pathName 'Epoched\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+%     EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'Epoched\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
 %% Trim the TMS-pulse 
     disp(['Trim the TMS-pulse  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     trim=[-2 15]; %DoublePulseINT=0 % trim=[-2 5];
@@ -181,9 +186,11 @@ EEG = eeg_checkset( EEG );
     end
    
     %pop_eegplot( EEG, 1, 1, 1);
-    mkdir([pathName '\Trimed'])
-    %EEG = pop_saveset( EEG, [pathName '\DEC\' EEG.filename]);
-    EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([pathName 'Trimed\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+    mkdir([outdir '\Trimed'])
+    %EEG = pop_saveset( EEG, [outdir '\DEC\' EEG.filename]);
+    %EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'Trimed\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+    EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'Trimed\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+
 %% DeTrending Epochs (also baseline correct)
     disp(['Detrending Epochs  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     % EEG = pop_loadset( ['D:\WORDKINGset_D\Optimal_targetting_SP\Epoched\OT_017_OJB3_1MV_SP_MASKING_Epo.set']);
@@ -217,9 +224,9 @@ EEG = eeg_checkset( EEG );
     %plot(detrend(EEG.data(elecc,:,epoo),1))
     %plot(EEG.times,EEG.data(elecc,:,epoo))
     %pop_eegplot( EEG, 1, 1, 1);
-   % mkdir([pathName '\detrend'])
-    %EEG = pop_saveset( EEG, [pathName '\DEC\' EEG.filename]);
-   % EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([pathName 'detrend\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+   % mkdir([outdir '\detrend'])
+    %EEG = pop_saveset( EEG, [outdir '\DEC\' EEG.filename]);
+   % EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'detrend\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
 %% remove bad channels
     disp(['remove bad channels  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     
@@ -350,9 +357,9 @@ EEG = eeg_checkset( EEG );
     end
     
     %    pop_eegplot( EEG, 1, 1, 1, {}, 'spacing', 70)
-    mkdir([pathName '\DEC'])
+    mkdir([outdir '\DEC'])
     %EEG = pop_saveset( EEG, [ '111.set']);
-    EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([pathName 'DEC\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+    EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'DEC\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
 %% Channel Interpolation - Better not to run at this stage
     disp(['Channel Interpolation  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     EEG = pop_interp(EEG, chanlocs62, 'spherical');
@@ -361,9 +368,9 @@ EEG = eeg_checkset( EEG );
     EEG = pop_select( EEG,'nochannel',remove_channels2);
     EEG = Z_append(EEG,'_interp');
     EEG = eeg_checkset( EEG );
-    mkdir([pathName '\interp'])
-    EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([pathName 'interp\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
-    % EEG = pop_saveset( EEG, 'filename','111.set','filepath',strrep([pathName 'interp\'],'\','\\'));
+    mkdir([outdir '\interp'])
+    EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'interp\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+    % EEG = pop_saveset( EEG, 'filename','111.set','filepath',strrep([outdir 'interp\'],'\','\\'));
     %EEG = pop_saveset( EEG, 'filename','111.set','filepath','D:\\WORDKINGset_D\\Optimal_targetting_SP\\interp\\');
     % EEG = pop_loadset( ['D:\WORDKINGset_D\Optimal_targetting_SP\interp\OBJ3_OT18_1mv_SP_MASKING_Epo_Dec_interp.set']);
     %pop_eegplot( EEG, 1, 1, 1);
@@ -402,13 +409,13 @@ EEG = eeg_checkset( EEG );
     %save data
     % create ICA folder
     EEG = Z_append(EEG,'_ICA1');
-    mkdir([pathName '\ICA1'])
-    %EEG = pop_saveset( EEG, [pathName 'ICA1\' EEG.filename]);
-    EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([pathName 'ICA1\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+    mkdir([outdir '\ICA1'])
+    %EEG = pop_saveset( EEG, [outdir 'ICA1\' EEG.filename]);
+    EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([outdir 'ICA1\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
 %% removes 'decay' & line-noise ICA components
     disp(['ICA1 - Comps removal  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     % remove TMS decay-artefatcs automatically and save data as  *rmDecay.setpathName
-    % pathName='D:\WORKINGset-D\ECT\PRE_SP\'
+    % outdir='D:\WORKINGset-D\ECT\PRE_SP\'
     
     EEG = ICAremDECAY(EEG);
     minfreq=58; maxfreq=62;
@@ -423,9 +430,9 @@ EEG = eeg_checkset( EEG );
 %     [EEG]  = tesa_compselect( EEG,'compCheck','off','comps',[],'tmsMuscle','off','blink','on','blinkThresh',Threshblink,'blinkElecs',blinkelec,'move','on','moveThresh',Threshmove,'moveElecs',latelec,'muscle','off','elecNoise','off');
 %     
     
-    mkdir([pathName '\removed_comps_ICA1'])
-    %EEG = pop_saveset( EEG, [pathName 'removed_comps_ICA1\' EEG.filename]);
-   EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([pathName 'removed_comps_ICA1\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+    mkdir([ '\removed_comps_ICA1'])
+    %EEG = pop_saveset( EEG, [ 'removed_comps_ICA1\' EEG.filename]);
+   EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([ 'removed_comps_ICA1\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
    % EEG = pop_loadset( 'D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\removed_comps_ICA1\WEL017_SPD_BL_Epo_Dec_interp_ICA1_EXP_NOfreq.set');
    % figure; plot(EEG.times,squeeze(mean(EEG.data(elecName(EEG,{'f3'}),:,[50:80]),3)))
      % figure; plot(EEG.times,squeeze(mean(EEG.data(elecName(EEG,{'f3'}),:,1:100),3)))
@@ -444,12 +451,12 @@ EEG = eeg_checkset( EEG );
 %     export_fig demo22.pdf -q101 -painters -append
 %plot(EEG.times,EEG.data(15,:,20))
     %EEG = Z_append(EEG,'_pruned1_filt');
-    %EEG = pop_saveset( EEG, [pathName EEG.filename]);
+    %EEG = pop_saveset( EEG, [ EEG.filename]);
     % save data *_rmDecay_Filterd1_48.set
 %% re-referencing
-    disp(['channel re-referencing  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
-    EEG.data=double(EEG.data);
-    EEG = pop_reref(EEG, []);
+    % disp(['channel re-referencing  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
+    % EEG.data=double(EEG.data);
+    % EEG = pop_reref(EEG, []);
 %% DeTrending Epochs Second time
     disp(['Detrending Epochs  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     
@@ -477,15 +484,15 @@ EEG = eeg_checkset( EEG );
     disp(['ICA2  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
     EEG.data=double(EEG.data);
     %EEG = pop_runica(EEG, 'lrate', 0.0001, 'extended',1, 'interupt','off','verbose','off');
-    EEG = pop_runica(EEG,'icatype','fastica','approach','symm','g','tanh','stabilization','on');.
-   %  EEG = pop_runica(EEG, 'icatype', 'picard', 'maxiter',500); %,'mode','standard';
+    %EEG = pop_runica(EEG,'icatype','fastica','approach','symm','g','tanh','stabilization','on');.
+     EEG = pop_runica(EEG, 'icatype', 'picard', 'maxiter',500); %,'mode','standard';
    % EEG = pop_runica(EEG,'icatype','binica','extended',1,'verbose','off')
     %save data
     % create ICA folder
     EEG = Z_append(EEG,'_ICA2');
-    mkdir([pathName '\ICA2'])
-   % EEG = pop_saveset( EEG, [pathName 'ICA2\' EEG.filename]);
-     EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([pathName 'ICA2\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
+    mkdir([ '\ICA2'])
+   % EEG = pop_saveset( EEG, [ 'ICA2\' EEG.filename]);
+     EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',strrep([ 'ICA2\'],'\','\\'),'check', 'on','savemode','onefile','version','7.3');
      %    pop_eegplot( EEG, 1, 1, 1, {}, 'spacing', 70)
     %% Clear
     clearvars -except chanlocs i fileNames pathName

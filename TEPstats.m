@@ -277,7 +277,7 @@ if strcmp(GMFPgrph,'on')
     yy=max(get(gca,'YLim')); %yy=yy.*0.1+yy;
     fb=fill([mintrim maxtrim maxtrim mintrim],[yy yy 0 0],'w','edgecolor','none');
     ax=gca; ax.XAxisLocation='origin' ;  ax.FontName='Helvetica Neue' ; ax.FontSize=11; ax.YAxisLocation = 'origin';ax.XTick = [ -20 0 15 30 45 60 100 200 250];legend('show');clear title;% 0 15 30 60 80 100 120 140 160 180 200 250
-    title(['Global Mean Field Power  _time:' strrep(num2str(statwin),'  ','_')]); ylabel ('\muv'); xlabel ('miliseconds');
+    title(['Global Mean Field Power  _time:' strrep(num2str(statwin),'  ','_')]); ylabel ('\muv'); xlabel ('milliseconds');
     legend([p1 p2],{strrep([ALLEEG(dataset(:,1)).setname ' n=' num2str(size(ALLEEG(dataset(:,1)).subjects,2))],'_',' '),...
         strrep([ALLEEG(dataset(:,2)).setname ' n=' num2str(size(ALLEEG(dataset(:,2)).subjects,2))],'_',' ')})
     ylim([min(get(gca,'YLim')) round(max([pp1.YData ; pp2.YData]))+1])
@@ -302,7 +302,7 @@ if strcmp(LMFPgrph,'on') %& size(elecnum,2)>1
     fb=fill([mintrim maxtrim maxtrim mintrim],[yy yy 0 0],'w','edgecolor','none');
     %axis([timeWin 0 amp]);
     ax=gca; ax.XAxisLocation='origin' ; ax.FontName='Helvetica Neue' ; ax.FontSize=11; ax.YAxisLocation = 'origin'; ax.XTick =[min(ax.XLim):50:max(ax.XLim)];% 0 15 30 60 80 100 120 140 160 180 200 250
-    legend('show'); clear title; title(['Local Mean Field Power ' strjoin([elecname]) '  time:' strrep(num2str(statwin),'  ','_')], 'interpreter', 'none'); ylabel ('\muv'); xlabel ('miliseconds');
+    legend('show'); clear title; title(['Local Mean Field Power ' strjoin([elecname]) '  time:' strrep(num2str(statwin),'  ','_')], 'interpreter', 'none'); ylabel ('\muv'); xlabel ('milliseconds');
     legend([p1 p2],{strrep([ALLEEG(dataset(:,1)).setname ' n=' num2str(size(ALLEEG(dataset(:,1)).subjects,2))],'_',' '),...
     strrep([ALLEEG(dataset(:,2)).setname ' n=' num2str(size(ALLEEG(dataset(:,2)).subjects,2))],'_',' ')})
     ylim([min(get(gca,'YLim')) round(max([pp1.YData ; pp2.YData]))+1])
@@ -338,7 +338,7 @@ if strcmp(wavgrph,'on')
     ax=gca;  ax.FontName='Helvetica Neue' ; ax.FontSize=11;  ax.XAxisLocation='origin' ;
     ax.YAxisLocation = 'origin';    ax.XTick = [ -20 0 15 30 45 60 100 200 250];
     ax.FontSize=11; legend('show');clear title; %ax.XTick = [timeWin(1):100:timeWin(2)]
-    title([strjoin([elecname]) strrep(num2str(statwin),'  ','_')], 'interpreter', 'none'); ylabel ('\muv'); xlabel ('miliseconds');
+    title([strjoin([elecname]) strrep(num2str(statwin),'  ','_')], 'interpreter', 'none'); ylabel ('\muv'); xlabel ('milliseconds');
     legend([p1 p2],{strrep([ALLEEG(dataset(:,1)).setname ' n=' num2str(size(ALLEEG(dataset(:,1)).subjects,2))],'_',' '),...
         strrep([ALLEEG(dataset(:,2)).setname ' n=' num2str(size(ALLEEG(dataset(:,2)).subjects,2)) ],'_',' ')})
     hold off;
@@ -357,7 +357,7 @@ if strcmp(ISP,'on')
     patch([ALLEEG(dataset(:,2)).times(timeInd) fliplr(ALLEEG(dataset(:,2)).times(timeInd))],[ISPVec1(:,:,dataset(:,2))-ISPVecste(:,:,dataset(:,2)) fliplr(ISPVec1(:,:,dataset(:,2))+ISPVecste(:,:,dataset(:,2)))],color{dataset(:,2)},'EdgeColor',[color{dataset(:,2)}.*0.5],'FaceVertexAlphaData',0.1,'FaceAlpha',0.3)%,'FaceVertexAlphaData',0.1,'FaceAlpha',0.3
     axis([timeWin -amp amp]);
     ax=gca; ax.XAxisLocation='origin' ;  ax.FontName='Helvetica Neue' ; ax.FontSize=11; ax.YAxisLocation = 'origin';ax.XTick = [-20 0 15 30 45 60 100 200 250];legend('show');clear title;
-    title(['Homologic ISP ' strjoin([elecHOMOname])], 'interpreter', 'none'); ylabel ('\muv'); xlabel ('miliseconds');
+    title(['Homologic ISP ' strjoin([elecHOMOname])], 'interpreter', 'none'); ylabel ('\muv'); xlabel ('milliseconds');
     legend([p1 p2],{strrep([ALLEEG(dataset(:,1)).setname(1:end) ' n=' num2str(size(ALLEEG(dataset(:,1)).subjects,2))],'_',' '),...
         strrep([ALLEEG(dataset(:,2)).setname(1:end) ' n=' num2str(size(ALLEEG(dataset(:,2)).subjects,2)) ],'_',' ')})
     hold off;
@@ -378,7 +378,7 @@ if strcmp(rectyfied,'on')
         [TEPrec(:,:,dataset(:,2))-TEPrecste(:,:,dataset(:,2)) fliplr(TEPrec(:,:,dataset(:,2))+TEPrecste(:,:,dataset(:,2)))],color{dataset(:,2)},'EdgeColor',[color{dataset(:,2)}.*0.5],'FaceVertexAlphaData',0.1,'FaceAlpha',0.3)%,'FaceVertexAlphaData',0.1,'FaceAlpha',0.3
     axis([timeWin -amp amp]);
     ax=gca; ax.XAxisLocation='origin' ;  ax.FontName='Helvetica Neue' ; ax.FontSize=11; ax.YAxisLocation = 'origin';ax.XTick = [-20 0 15 30 45 60 100 200 250];legend('show');clear title;
-    title(['Rectyfied ' strjoin([elecname])], 'interpreter', 'none'); ylabel ('\muv'); xlabel ('miliseconds');
+    title(['Rectyfied ' strjoin([elecname])], 'interpreter', 'none'); ylabel ('\muv'); xlabel ('milliseconds');
     legend([p1 p2],{strrep([ALLEEG(dataset(:,1)).setname ' n=' num2str(size(ALLEEG(dataset(:,1)).subjects,2))],'_',' '),...
         strrep([ALLEEG(dataset(:,2)).setname ' n=' num2str(size(ALLEEG(dataset(:,2)).subjects,2)) ],'_',' ')})
     hold off;
@@ -396,7 +396,7 @@ if strcmp(rectyfied,'on')
         axis([timeWin -amp amp]);
         ax=gca; ax.XAxisLocation='origin' ;  ax.FontName='Helvetica Neue' ; ax.FontSize=11; ax.YAxisLocation = 'origin';ax.XTick = [ 0 15 30 60 100 200 250];
         ax.FontSize=11; legend('show');clear title;
-        title(['Homologic rectifyed ISP ' strjoin([elecHOMOname])], 'interpreter', 'none'); ylabel ('\muv'); xlabel ('miliseconds');
+        title(['Homologic rectifyed ISP ' strjoin([elecHOMOname])], 'interpreter', 'none'); ylabel ('\muv'); xlabel ('milliseconds');
         legend([p1 p2],{strrep([ALLEEG(dataset(:,1)).setname ' n=' num2str(size(ALLEEG(dataset(:,1)).subjects,2))],'_',' '),...
             strrep([ALLEEG(dataset(:,2)).setname ' n=' num2str(size(ALLEEG(dataset(:,2)).subjects,2)) ],'_',' ')})
         hold off;
