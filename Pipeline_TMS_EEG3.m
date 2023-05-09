@@ -380,7 +380,7 @@ clear EEG1
     
     if (contains(EEG.setname,'_RSP'))
         ROI = {'F4' 'fpz' 'fp2' 'AF4' 'F12' 'FT12' 'F2' 'FT8' 'AF6' 'F8' 'FC8' 'FC6' 'F6' 'FC4' 'c4' 'c6' 't8' 'af8' 'afz' 'fz' 'fcz' 'FP2'};
-    elseif (contains(EEG.setname,'_RSP'))
+    elseif (contains(EEG.setname,'_LSP'))
         ROI = {'F3' 'fpz' 'fp2' 'AF3' 'F11' 'FT11' 'F1' 'FT7' 'AF5' 'F7' 'FC7' 'FC5' 'F5' 'FC3' 'c3' 'c5' 't7' 'af7' 'afz' 'fz' 'fcz' 'FP1'};
     end
 

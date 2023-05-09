@@ -99,8 +99,8 @@ if sum(compRem)>0
     %        EEG.datfile=datfile;
     %%
     EEG.Removed_ICA_Comps.EXPwaveform=CompWave(1:size(find(compRem,remocomp),1),:);
-    disp('Exponent components removed:')
-    EEG.Removed_ICA_Comps.comps_num={(find(compRem,remocomp))} %
+    disp('Exponent components removed')
+    EEG.Removed_ICA_Comps.comps_num={(find(compRem,remocomp))}; %
 
     EEG=Z_append(EEG,'_EXP');
 else
