@@ -5,12 +5,9 @@ Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Suicidality_801566\Neurophysio
 fileNames={Path.name}';
 % [fileNames, pathName]=Z_getSetsFileNames('set');
 %  pathName='D:\WORDKINGset_D\SARA_theta_jittered_data\'
-%  chanlocs62=load('E:\Google_Drive\MATLAB\LAB_MatlabScripts\Chanlocs_64Ch-EasyCap_for_BrainAmp_AFz_FCz.mat');
-%  load('D:\Google_Drive\MATLAB\LAB_MatlabScripts\chanlocs68.mat');
-%  load('D:\Google_Drive\MATLAB\LAB_MatlabScripts\chanlocs62.mat');
+%  chanlocs62=load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat');
+
 %  chanlocs = readlocs( 'd:\\Google_Drive\\MATLAB\\EEGLAB\\plugins\\dipfit\\standard_BEM\\elec\\standard_1005.elc');
-%  chanlocs62 = loadbvef( 'D:\OneDrive\MATLAB\easyCap64_montage\AS-64_REF.bvef');   
-%  chanlocs62 = readlocs( 'A:\Workingset-A\shengze_tmseeg_202007_test_ZNN\ANT_64.ced');    
 %  load('D:\Google_Drive\MATLAB\LAB_MatlabScripts\Chanlocs_64Ch-EasyCap_for_BrainAmp_AFz_FCz.mat');%ST-THETA-BURST
 %  chanlocs=chanlocs62; %ST-THETA-BURST
 for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP

@@ -29,7 +29,8 @@ remocomp=5 ;% how many ICA comp. to remove.
 %%
 warning 'off'
 %Ranks components, outputs variance
-[EEG, ~] = tesa_sortcomps(EEG);
+%[EEG, ~] = tesa_sortcomps(EEG);
+[EEG, ~] = sortcomps(EEG, [0 400]);
 comps = 1:maxcomps; % 1:size(EEG.icaweights,1);
 eNum= sort(elecName(EEG, ROI));
 % TMS_pop_selectcomps(EEG, [1:35] );
