@@ -1,6 +1,6 @@
 clear all
 [fileNames, pathName]=Z_getSetsFileNames('cdt');
-% [fileNames, pathName]=Z_getSetsFileNames('set');
+% [fileNames, pathName]=Z_getSetsFileNames('set');aa
 %  pathName='D:\WORDKINGset_D\SARA_theta_jittered_data\'
 %  chanlocs62=load('E:\Google_Drive\MATLAB\LAB_MatlabScripts\Chanlocs_64Ch-EasyCap_for_BrainAmp_AFz_FCz.mat');
 %  load('D:\Google_Drive\MATLAB\LAB_MatlabScripts\chanlocs68.mat');
