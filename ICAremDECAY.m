@@ -1,11 +1,11 @@
-function [EEG] = ICAremDECAY(EEG)
+function [EEG] = ICAremDECAY(EEG,ROI)
 
 
 % ROI = {'Fpz' 'Fp2' 'AF8' 'F8' 'FT8' 'AFz' 'AF4' 'F6' 'FC6' 'Fz' 'F2' 'F4' 'FC4' 'FC2' };
 ROIThresh=0.65;
-ROI = {'F3' 'FP1' 'fpz' 'fp2' 'AF3' 'F11' 'FT11' 'F12' 'FT12' 'F1' 'FT7' 'AF5' 'F7' 'FC7' 'FC5' 'F5' 'FC3' 'c3' 'c5' 't7' 'af7' 'fpz' 'afz' 'fz' 'fcz'};
+%ROI = {'F3' 'FP1' 'fpz' 'fp2' 'AF3' 'F11' 'FT11' 'F12' 'FT12' 'F1' 'FT7' 'AF5' 'F7' 'FC7' 'FC5' 'F5' 'FC3' 'c3' 'c5' 't7' 'af7' 'fpz' 'afz' 'fz' 'fcz'};
 tmsMuscleThresh=5; % best threshold is 7 if the the decay is longer try to reduce the number
-maxcomps=40 ;%how many ICA components to check
+maxcomps=15 ;%how many ICA components to check
 remocomp=5 ;% how many ICA comp. to remove.
 
 %% loops through files -omited
@@ -29,7 +29,8 @@ remocomp=5 ;% how many ICA comp. to remove.
 %%
 warning 'off'
 %Ranks components, outputs variance
-[EEG, ~] = tesa_sortcomps(EEG);
+%[EEG, ~] = tesa_sortcomps(EEG);
+[EEG, ~] = sortcomps(EEG, [0 400]);
 comps = 1:maxcomps; % 1:size(EEG.icaweights,1);
 eNum= sort(elecName(EEG, ROI));
 % TMS_pop_selectcomps(EEG, [1:35] );
@@ -99,6 +100,7 @@ if sum(compRem)>0
     %        EEG.datfile=datfile;
     %%
     EEG.Removed_ICA_Comps.EXPwaveform=CompWave(1:size(find(compRem,remocomp),1),:);
+    disp('Exponent components removed')
     EEG.Removed_ICA_Comps.comps_num={(find(compRem,remocomp))}; %
 
     EEG=Z_append(EEG,'_EXP');

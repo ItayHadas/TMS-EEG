@@ -69,7 +69,8 @@ end
 
     %%
 %remcomps=find(zscore(Ratio)>=2.5)%Ratio(find(zscore(Ratio)>=2));
-remcomps=find(Ratio>=200);
+disp('Line noise components removed:')
+remcomps=find(Ratio>=200)
 %
 % Ratio(find(Ratio>=100))
 % TMS_pop_selectcomps(EEG, [remcomps] );

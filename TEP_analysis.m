@@ -42,11 +42,12 @@ clear -vars pathName fileNames
 %% Load Wellcome-LEAP GRANDS
 %[fileNames, pathName]=Z_getSetsFileNames;
 clear all
-pathi='D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA2\final1'
-cd 'D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA2\remcomp'
-cd 'D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA2\final1'
+pathi='D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\final1'
 
-load('D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA2\remcomp');% 'D:\OneDrive\PhD Zangen\ADHD\avi''s paper\BIG_FINAL_DATA_table.mat'
+%cd 'D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA2\remcomp'
+cd(pathi)
+
+%load('D:\DATA\WellcomeLeap_TMS-EEG\RAW_SP\interp\ICA2\remcomp');% 'D:\OneDrive\PhD Zangen\ADHD\avi''s paper\BIG_FINAL_DATA_table.mat'
 %Final4=Final4(:,[1:23 26:27 30:34 46:40 42:end]);
 %pathName='D:\WORKINGSET_D\ADHD\';
 pathName=pathi;
@@ -152,12 +153,12 @@ dataset=[1 2]
 %ALLEEG(1).condition = 'ADHD';%      ALLEEG(1).condition = 'POST';
 %ALLEEG(2).condition = 'Healthy'; %     ALLEEG(2).condition = 'PRE';
 Groups= {ALLEEG(dataset(1)).condition ALLEEG(dataset(2)).condition}%{'Pre' 'Post'};
-wavgrph='on'
-violinplt='on'
-fixfit='on'
-facelift='on'
+wavgrph='o'
+violinplt='o'
+fixfit='o'
+facelift='o'
 LMFPgrph='on'
-GMFPgrph='o'
+GMFPgrph='on'
 ISP='o'
 bargrph='o'
 rectyfied='o'
