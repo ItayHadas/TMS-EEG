@@ -1,14 +1,12 @@
 clear all
-<<<<<<< HEAD
+
 [fileNames, pathName]=Z_getSetsFileNames('cdt');
 % [fileNames, pathName]=Z_getSetsFileNames('set');aa
-=======
 %[fileNames, pathName]=Z_getSetsFileNames('cdt');
 outdir='A:\WorkingSet\suicidality_TEP\' %pathName
 Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Suicidality_801566\Neurophysiology_Data\**\*SPD_*.cdt');
 fileNames={Path.name}';
 % [fileNames, pathName]=Z_getSetsFileNames('set');
->>>>>>> 283bd52978d1b8a173b92583d8f1e8ab4306c1ab
 %  pathName='D:\WORDKINGset_D\SARA_theta_jittered_data\'
 %  chanlocs62=load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat');
 
