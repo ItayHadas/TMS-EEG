@@ -1,7 +1,4 @@
 clear all
-
-[fileNames, pathName]=Z_getSetsFileNames('cdt');
-% [fileNames, pathName]=Z_getSetsFileNames('set');aa
 %[fileNames, pathName]=Z_getSetsFileNames('cdt');
 outdir='A:\WorkingSet\suicidality_TEP\' %pathName
 Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Suicidality_801566\Neurophysiology_Data\**\*SPD_*.cdt');
