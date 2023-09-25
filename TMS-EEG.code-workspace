@@ -1,0 +1,35 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "AARATEPPipeline",
+			"path": "../AARATEPPipeline"
+		}
+	],
+	"settings": {
+		"workbench.colorCustomizations": {
+			"activityBar.activeBackground": "#89f872",
+			"activityBar.background": "#89f872",
+			"activityBar.foreground": "#15202b",
+			"activityBar.inactiveForeground": "#15202b99",
+			"activityBarBadge.background": "#6780f7",
+			"activityBarBadge.foreground": "#15202b",
+			"commandCenter.border": "#15202b99",
+			"sash.hoverBorder": "#89f872",
+			"sideBar.border": "#89f872",
+			"statusBar.background": "#60f542",
+			"statusBar.foreground": "#15202b",
+			"statusBarItem.hoverBackground": "#37f212",
+			"statusBarItem.remoteBackground": "#60f542",
+			"statusBarItem.remoteForeground": "#15202b",
+			"tab.activeBorder": "#89f872",
+			"titleBar.activeBackground": "#60f542",
+			"titleBar.activeForeground": "#15202b",
+			"titleBar.inactiveBackground": "#60f54299",
+			"titleBar.inactiveForeground": "#15202b99"
+		},
+		"peacock.color": "#60f542"
+	}
+}
