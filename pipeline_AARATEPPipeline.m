@@ -1,11 +1,11 @@
 clear all
-addpath('D:\GITs\AARATEPPipeline');
-outdir='A:\WorkingSet\suicidality_TEP\' %pathName
-Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Suicidality_801566\Neurophysiology_Data\**\*SPD_*.cdt');
+addpath('D:\GITs\AARATEPPipeline'); addpath('D:\GITs\TMS-EEG'); %addpath('D:\GITs\TMS-EEG\FastICA_25');
+addpath('D:\GITs\TMS-EEG\picard'); %addpath('D:\GITs\TMS-EEG\ICLabel-1.2.3');
+outdir='A:\WorkingSet\WellcomeLeap_TEP';
+Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Wellcome_Leap_802232\Neurophysiology_Data\**\*SPD_*.cdt');
 fileNames={Path.name}';
-chanlocs62=load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat');
-%  chanlocs = readlocs( 'd:\\Google_Drive\\MATLAB\\EEGLAB\\plugins\\dipfit\\standard_BEM\\elec\\standard_1005.elc');
-%  load('D:\Google_Drive\MATLAB\LAB_MatlabScripts\Chanlocs_64Ch-EasyCap_for_BrainAmp_AFz_FCz.mat');%ST-THETA-BURST
+chanlocs=load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat');
+eeglab
 for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     fileName=fileNames{i};
     pathName=[Path(i).folder '\'];
@@ -37,16 +37,31 @@ for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     EEG = eeg_checkset( EEG );
     disp(['Dataset is loaded ' num2str(i) '/' num2str(size(fileNames,1))])
     disp(['remove un-needed channels  - dataset ' num2str(i) '/' num2str(size(fileNames,1))]);
-    remove_channels= {'lz' 'VEO' 'HEO' 'VEOG' 'HEOG' 'EKG' 'EMG' 'EOG' 'HL 1' 'HL 2' 'Trigger'};
+    remove_channels= { 'F11' 'F12' 'FT11' 'FT12' 'CB1' 'CB2' 'lz' 'VEO' 'HEO' 'VEOG' 'HEOG' 'EKG' 'EMG' 'EOG' 'HL 1' 'HL 2' 'Trigger'};
     %figure; topoplot([],EEG.chanlocs, 'style', 'blank',  'electrodes', 'labelpoint', 'chaninfo', EEG.chaninfo)
     chanlocs62=EEG.chanlocs;
     EEG = pop_select( EEG,'nochannel',remove_channels);
-    EEG = eeg_checkset( EEG );
-    for i=1:size(EEG.event,2)
-        EEG.event(i).type = num2str(EEG.event(i).type);
+    evname= '128'; 
+    newtrigs=1; 
+    method=1;
+    DoublePulseINT=0; % paired-pulse interval, Zero (0) in case of single pulse
+    [impotant, ~]=elecName(EEG,{'f5' 'f3' 'f1' 'fc5' 'fc3' 'fc1' 'fcz' 'fc2' 'c1' 'cz' 'c2' 'c4' 'c6' 'cp5' 'cp3'});
+    if (contains(EEG.setname,'_RS'))
+        [impotant, ~]=elecName(EEG,{'f6' 'f4' 'f2' 'fc6' 'fc4' 'fc1' 'fcz' 'fc2' 'c1' 'cz' 'c2' 'c4' 'c6' 'cp5' 'cp3'});
     end
-    EEG = c_TMSEEG_Preprocess_AARATEPPipeline(EEG,...
-        'epochTimespan', [-0.5 0.8],...
+    EEG = IDpulse(EEG,method,DoublePulseINT,impotant,newtrigs,evname);
+    EEG = eeg_checkset( EEG );
+    % for jj=1:size(EEG.event,2)
+    %     EEG.event(jj).type = num2str(EEG.event(jj).type);
+    % end
+    %  pop_eegplot( EEG, 1, 1, 1);
+    % EEG=TMPEEG; 
+    TMPEEG=EEG;
+    EEG_mat = c_TMSEEG_Preprocess_AARATEPPipeline(EEG,...
+        'epochTimespan', [-1 1],...
         'outputDir', outdir,...
-        'outputFilePrefix', 'Clean',...
+        'pulseEvent',evname,...
+        'outputFilePrefix',[EEG.setname '_Clean'],...
         'doDecayRemovalPerTrial',true);  
+
+    
