@@ -1,13 +1,15 @@
 clear all
-addpath('D:\GITs\AARATEPPipeline'); addpath('D:\GITs\TMS-EEG'); %addpath('D:\GITs\TMS-EEG\FastICA_25');
+addpath('D:\GITs\TMS-EEG'); 
 addpath('D:\GITs\TMS-EEG\picard'); 
 addpath(genpath('D:\GITs\AARATEPPipeline\Common\ThirdParty\amica'));
 outdir='A:\WorkingSet\WellcomeLeap_TEP';
+gitdir='D:\GITs\AARATEPPipeline'
+addpath(gitdir);
 Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Wellcome_Leap_802232\Neurophysiology_Data\**\*SPD_*.cdt');
 fileNames={Path.name}';
-chanlocs=load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat');
+%chanlocs=load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat');
 eeglab
-for i=2: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
+for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     fileName=fileNames{i};
     pathName=[Path(i).folder '\'];
     if strcmpi(fileName(:,end-2:end),'set')
@@ -15,7 +17,7 @@ for i=2: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     elseif strcmpi(fileName(:,end-2:end),'cnt')
         EEG = pop_loadcnt([pathName fileName] , 'dataformat', 'int32');
     elseif strcmpi(fileName(:,end-2:end),'cdt')
-        EEG = loadcurry([pathName fileName], 'CurryLocations', 'True'); %'CurryLocations', 'False'
+        EEG = loadcurry([pathName fileName], 'CurryLocations', 'True');
     elseif strcmpi(fileName(:,end-3:end),'vhdr')
         EEG  = pop_loadbv(pathName , fileName );
     end
@@ -57,6 +59,7 @@ for i=2: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
         'outputDir', outdir,...
         'pulseEvent',evname,...
         'outputFilePrefix',[EEG.setname '_Clean'],...
+        'ICAType','picard',...
         'doDecayRemovalPerTrial',true);   %'ICAType','amica',...
     EEG_mat.setname=[EEG.setname '_AARATEPPipeline'];
     EEG_mat.filename=[EEG.setname '_AARATEPPipeline.set']

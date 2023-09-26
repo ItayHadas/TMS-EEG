@@ -6,6 +6,10 @@
 		{
 			"name": "AARATEPPipeline",
 			"path": "../AARATEPPipeline"
+		},
+		{
+			"name": "TESA",
+			"path": "../TESA"
 		}
 	],
 	"settings": {
