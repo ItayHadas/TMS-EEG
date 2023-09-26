@@ -1,6 +1,6 @@
 clear all
 addpath('D:\GITs\AARATEPPipeline'); addpath('D:\GITs\TMS-EEG'); %addpath('D:\GITs\TMS-EEG\FastICA_25');
-addpath('D:\GITs\TMS-EEG\picard'); %addpath('D:\GITs\TMS-EEG\ICLabel-1.2.3');
+addpath('D:\GITs\TMS-EEG\picard'); 
 addpath(genpath('D:\GITs\AARATEPPipeline\Common\ThirdParty\amica'));
 outdir='A:\WorkingSet\WellcomeLeap_TEP';
 Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Wellcome_Leap_802232\Neurophysiology_Data\**\*SPD_*.cdt');
@@ -52,17 +52,16 @@ for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     end
     EEG = IDpulse(EEG,method,DoublePulseINT,impotant,newtrigs,evname);
     EEG = eeg_checkset( EEG );
-    % for jj=1:size(EEG.event,2)
-    %     EEG.event(jj).type = num2str(EEG.event(jj).type);
-    % end
-    %  pop_eegplot( EEG, 1, 1, 1);
-    % EEG=TMPEEG; 
-    TMPEEG=EEG;
     EEG_mat = c_TMSEEG_Preprocess_AARATEPPipeline(EEG,...
         'epochTimespan', [-1 1],...
         'outputDir', outdir,...
         'pulseEvent',evname,...
         'outputFilePrefix',[EEG.setname '_Clean'],...
         'doDecayRemovalPerTrial',true);   %'ICAType','amica',...
-EEG_mat.setname=
-EEG_mat.filename
+    EEG_mat.setname=[EEG.setname '_AARATEPPipeline'];
+    EEG_mat.filename=[EEG.setname '_AARATEPPipeline.set']
+    EEG_mat.filepath=outdir;
+    EEG_mat.datfile='';
+    EEG_mat = pop_saveset( EEG_mat, 'filename',EEG_mat.filename,'filepath',EEG_mat.filepath,'check', 'on','savemode','onefile','version','7.3');
+    clear EEG_mat EEG
+end

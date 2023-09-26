@@ -7,7 +7,7 @@ Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Wellcome_Leap_802232\Neurophys
 fileNames={Path.name}';
 chanlocs=load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat');
 eeglab
-for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
+for i=2: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     fileName=fileNames{i};
     pathName=[Path(i).folder '\'];
     if strcmpi(fileName(:,end-2:end),'set')
@@ -63,3 +63,5 @@ for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     EEG_mat.filepath=outdir;
     EEG_mat.datfile='';
     EEG_mat = pop_saveset( EEG_mat, 'filename',EEG_mat.filename,'filepath',EEG_mat.filepath,'check', 'on','savemode','onefile','version','7.3');
+    clear EEG_mat EEG
+end
