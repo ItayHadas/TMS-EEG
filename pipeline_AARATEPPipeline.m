@@ -1,20 +1,41 @@
+matlab -nosplash -nodesktop
+workspace
 clear all
-addpath('D:\GITs\TMS-EEG'); 
-addpath('D:\GITs\TMS-EEG\picard'); 
-addpath('D:\GITs\AARATEPPipeline');
-addpath('D:\GITs\AARATEPPipeline\Common');
-addpath('D:\GITs\AARATEPPipeline\Common\EEGAnalysisCode');
-addpath(genpath('D:\GITs\AARATEPPipeline\Common\ThirdParty\amica'));
-outdir='A:\WorkingSet\WellcomeLeap_TEP';
-gitdir='D:\GITs\AARATEPPipeline'
+
+if (ispc)
+    sep='\';
+    not_sep='/';
+    rep_space = ' ';
+    GITS='D:\GITs\';
+    Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Wellcome_Leap_802232\Neurophysiology_Data\**\*SPD_*.cdt');
+    outdir='A:\WorkingSet\WellcomeLeap_TEP';
+elseif (ismac || isunix)
+    sep='/';
+    not_sep='\';
+    rep_space = '\ ';
+    GITS='/media/ipp/DATA/GITs';
+    Path = dir('/mnt/INTERPSYC/DATA/Wellcome_Leap_802232/Neurophysiology_Data/**/*SPD_*.cdt');
+    outdir='/media/ipp/DATA/EEG_DATA/WellcomeLeap_TEP';
+    eeglabdir='/media/ipp/DATA/Documents/MATLAB/eeglab2023.1'; 
+end
+
+addpath([GITS sep 'TMS-EEG']); 
+addpath([GITS sep 'TMS-EEG' sep 'picard']); 
+addpath([GITS sep 'TESA']);
+addpath(genpath([GITS sep 'AARATEPPipeline' sep 'Common' sep 'ThirdParty' sep 'amica']));
+gitdir=[GITS sep 'AARATEPPipeline'];
 addpath(gitdir);
-Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Wellcome_Leap_802232\Neurophysiology_Data\**\*SPD_*.cdt');
+addpath([GITS sep 'AARATEPPipeline' sep 'Common']);
+addpath([GITS sep 'AARATEPPipeline' sep 'Common' sep 'EEGAnalysisCode']);
+addpath(eeglabdir)
+
 fileNames={Path.name}';
 %chanlocs=load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat');
 eeglab
 for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     fileName=fileNames{i};
-    pathName=[Path(i).folder '\'];
+    pathName=[Path(i).folder sep];
+    disp([ 'Loading ' num2str(i) ' out of ' num2str(size(fileNames,1)) '   -   ' fileName ])
     if strcmpi(fileName(:,end-2:end),'set')
         EEG = pop_loadset( [pathName fileName]);
     elseif strcmpi(fileName(:,end-2:end),'cnt')
@@ -24,7 +45,6 @@ for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     elseif strcmpi(fileName(:,end-3:end),'vhdr')
         EEG  = pop_loadbv(pathName , fileName );
     end
-    disp([ num2str(i) ' out of ' num2str(size(fileNames,1)) '   -   ' fileName ])
     EEG.filename=fileName;
     EEG.subject=EEG.filename(1:6);
     if strcmpi(fileName(:,end-3:end),'vhdr')
