@@ -1,6 +1,9 @@
 clear all
 addpath('D:\GITs\TMS-EEG'); 
 addpath('D:\GITs\TMS-EEG\picard'); 
+addpath('D:\GITs\AARATEPPipeline');
+addpath('D:\GITs\AARATEPPipeline\Common');
+addpath('D:\GITs\AARATEPPipeline\Common\EEGAnalysisCode');
 addpath(genpath('D:\GITs\AARATEPPipeline\Common\ThirdParty\amica'));
 outdir='A:\WorkingSet\WellcomeLeap_TEP';
 gitdir='D:\GITs\AARATEPPipeline'
