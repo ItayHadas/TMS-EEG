@@ -1,7 +1,7 @@
 matlab -nosplash -nodesktop
-workspace
+
+workspace 
 clear all
-% https://insiders.vscode.dev/tunnel/ucsd-workstation/d:/GITs/TMS-EEG/TMS-EEG.code-workspace
 if (ispc)
     sep='\';
     not_sep='/';
@@ -31,8 +31,8 @@ addpath(eeglabdir)
 
 fileNames={Path.name}';
 %chanlocs=load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat');
-eeglab
-for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
+eeglab nogui
+for i= 1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     fileName=fileNames{i};
     pathName=[Path(i).folder sep];
     disp([ 'Loading ' num2str(i) ' out of ' num2str(size(fileNames,1)) '   -   ' fileName ])

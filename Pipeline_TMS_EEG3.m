@@ -1,5 +1,4 @@
 clear all
-
 %[fileNames, pathName]=Z_getSetsFileNames('cdt');
 outdir='A:\WorkingSet\suicidality_TEP\' %pathName
 Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Suicidality_801566\Neurophysiology_Data\**\*SPD_*.cdt');
@@ -11,8 +10,6 @@ fileNames={Path.name}';
 %  chanlocs = readlocs( 'd:\\Google_Drive\\MATLAB\\EEGLAB\\plugins\\dipfit\\standard_BEM\\elec\\standard_1005.elc');
 %  load('D:\Google_Drive\MATLAB\LAB_MatlabScripts\Chanlocs_64Ch-EasyCap_for_BrainAmp_AFz_FCz.mat');%ST-THETA-BURST
 %  chanlocs=chanlocs62; %ST-THETA-BURST
-
-
 for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
 %% loading the files
     
