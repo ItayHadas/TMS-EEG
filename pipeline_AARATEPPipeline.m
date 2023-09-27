@@ -31,7 +31,7 @@ addpath(eeglabdir)
 
 fileNames={Path.name}';
 %chanlocs=load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat');
-eeglab
+eeglab nogui
 for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     fileName=fileNames{i};
     pathName=[Path(i).folder sep];
