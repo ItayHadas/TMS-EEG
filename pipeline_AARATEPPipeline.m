@@ -1,7 +1,7 @@
 matlab -nosplash -nodesktop
 workspace
 clear all
-
+% https://insiders.vscode.dev/tunnel/ucsd-workstation/d:/GITs/TMS-EEG/TMS-EEG.code-workspace
 if (ispc)
     sep='\';
     not_sep='/';
