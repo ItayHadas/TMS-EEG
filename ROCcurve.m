@@ -102,8 +102,8 @@ plot([1-specificity],[sensitivity],'-s','MarkerSize',9,...
 str={['Accuracy = ' num2str(accuracy)], ['Sensitivity = ' num2str(sensitivity)],...
     ['Specificity = ' num2str(specificity)],['Likelihood ratio positive = ' num2str(Likelihood_pos)],...
     ['Likelihood ratio negative = ' num2str(Likelihood_neg)]}; 
-t=annotation('textbox',[0.46 0.05 0.4 0.27],'String',str,'FitBoxToText','on');
-t.FontName='Helvetica Neue'; t.FontSize = 11; t.FontWeight='bold';
+t=annotation('textbox',[0.45 0.08 0.4 0.29],'String',str,'FitBoxToText','on');
+t.FontName='Helvetica Neue'; t.FontSize = 11; t.FontWeight='bold'; t.LineStyle='none';
 hold off
 figure('position', [500 200 520 210])
 CM=confusionchart(cellstr(response),cellstr(validationPredictions2));
