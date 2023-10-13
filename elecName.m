@@ -27,8 +27,8 @@ for a = 1:size(elecname,2)
         eNum (1,size(eNum,2)+1) = find(strcmpi(elecname{1,a},elec));
         eName (1,size(eName,2)+1) = elec(strcmpi(elecname{1,a},elec));
         else contains(class(elecname{1,a}),'double')
-            eNum (1,size(eNum,2)+1) = elecname{1,a};
-            eName (1,size(eName,2)+1) = elec(elecname{1,a});
+            eNum (1,size(eNum,2)+1) = elecname{:}(a);
+            eName (1,size(eName,2)+1) = elec(elecname{:}(a));
     end
     
 end
