@@ -10,7 +10,7 @@ eNum = [];
 eName = {};
 
 for a = 1:size(elecname,2)
-    if isempty(find(strcmpi(elecname{1,a},elec)))
+    if isempty(find(strcmpi(elecname{1,a},elec))) & ~contains(class(elecname{1,a}),'double')
         
         warning(['electrode ' elecname{1,a} ...
             ' is not present in the EEG.chanlocs set. Electrode not included ']);
@@ -23,9 +23,12 @@ for a = 1:size(elecname,2)
         eName(1,size(eName,2)+1) = {'NONEabab'};
         eNum (1,size(eNum,2)+1) =[nan]  ;
     else
-        
+        if ~contains(class(elecname{1,a}),'double')
         eNum (1,size(eNum,2)+1) = find(strcmpi(elecname{1,a},elec));
         eName (1,size(eName,2)+1) = elec(strcmpi(elecname{1,a},elec));
+        else contains(class(elecname{1,a}),'double')
+            eNum (1,size(eNum,2)+1) = elecname{1,a};
+            eName (1,size(eName,2)+1) = elec(elecname{1,a});
     end
     
 end

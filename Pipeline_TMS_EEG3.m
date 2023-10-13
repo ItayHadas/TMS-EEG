@@ -1,8 +1,31 @@
+% matlab -nosplash -nodesktop
 clear all
 
-%[fileNames, pathName]=Z_getSetsFileNames('cdt');
+
+clear all
+
+if (ispc)
+    sep='\';
+    not_sep='/';
+    rep_space = ' ';
+    GITS='D:\GITs\';
+    Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Wellcome_Leap_802232\Neurophysiology_Data\**\*SPD_*.cdt');
+    outdir='A:\WorkingSet\WellcomeLeap_TEP';
+elseif (ismac || isunix)
+    sep='/';
+    not_sep='\';
+    rep_space = '\ ';
+    GITS='/media/ipp/DATA/GITs';
+    outdir='/media/ipp/DATA/EEG_DATA/WellcomeLeap_SCS/';
+    eeglabdir='/media/ipp/DATA/Documents/MATLAB/eeglab2023.1'; 
+    preprocessdir='/media/ipp/DATA/EEG_DATA/WellcomeLeap_TEP';
+    preprocessdir='/media/ipp/DATA/EEG_DATA/Maintenance/';
+    Path = dir([preprocessdir '/**/*.vhdr']); % {Path.name}'
+end  
+addpath('/media/ipp/DATA/GITs/Localization/','/media/ipp/DATA/GITs/TMS-EEG/' )
+addpath(eeglabdir); eeglab nogui
+%[fileNames, pathName]=Z_getSetsFileNames('vhdr');
 outdir='A:\WorkingSet\suicidality_TEP\' %pathName
-Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Suicidality_801566\Neurophysiology_Data\**\*SPD_*.cdt');
 fileNames={Path.name}';
 % [fileNames, pathName]=Z_getSetsFileNames('set');
 %  pathName='D:\WORDKINGset_D\SARA_theta_jittered_data\'
@@ -18,7 +41,7 @@ for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     
     fileName=fileNames{i};
     %fileName=Path(i).name;
-    pathName=[Path(i).folder '\'];
+    pathName=[Path(i).folder sep];
 % pathName='X:\TEMERTY\MDD_ECT_rTMS\rTMS\EEG_data\MDD266\PRE\';
 % fileName='MDD266_PRE_TMS_DLPFC_SP2.cnt dec.cnt'
     if   strcmpi(fileName(:,end-2:end),'set')
