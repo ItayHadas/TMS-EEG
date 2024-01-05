@@ -8,6 +8,7 @@ if (ispc)
     rep_space = ' ';
     GITS='D:\GITs\';
     Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Wellcome_Leap_802232\Neurophysiology_Data\**\*SPD_*.cdt');
+    eeglabdir='D:\MATLAB\EEGLAB2023.1'; 
     outdir='A:\WorkingSet\WellcomeLeap_TEP';
 elseif (ismac || isunix)
     sep='/';
@@ -28,7 +29,7 @@ addpath(gitdir);
 addpath([GITS sep 'AARATEPPipeline' sep 'Common']);
 addpath([GITS sep 'AARATEPPipeline' sep 'Common' sep 'EEGAnalysisCode']);
 addpath(eeglabdir)
-
+% Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Wellcome_Leap_802232\Neurophysiology_Data\WEL013\WEL013_PRE\WEL013_2BAC_BL.cdt');
 fileNames={Path.name}';
 %chanlocs=load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat');
 eeglab nogui
