@@ -25,7 +25,7 @@ end
 
 
 vars=corrvars;
-groups=Final.group;
+groups=Final.Group;
 % corrsADHD=table2array(Final(Final.group==expgroup,3:end)) ;
 tabdbl=~strcmp(varfun(@class,Final,'OutputFormat','cell'),'double') & ~strcmp(varfun(@class,Final,'OutputFormat','cell'),'single');
 
