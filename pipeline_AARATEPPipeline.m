@@ -30,7 +30,7 @@ addpath([GITS sep 'AARATEPPipeline' sep 'Common']);
 addpath([GITS sep 'AARATEPPipeline' sep 'Common' sep 'EEGAnalysisCode']);
 addpath(eeglabdir)
 % Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Wellcome_Leap_802232\Neurophysiology_Data\WEL013\WEL013_PRE\WEL013_2BAC_BL.cdt');
-fileNames={Path.name}';
+fileNames={Path.name}'; 
 %chanlocs=load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat');
 eeglab nogui
 for i= 1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
