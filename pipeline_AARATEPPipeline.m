@@ -29,11 +29,12 @@ addpath(gitdir);
 addpath([GITS sep 'AARATEPPipeline' sep 'Common']);
 addpath([GITS sep 'AARATEPPipeline' sep 'Common' sep 'EEGAnalysisCode']);
 addpath(eeglabdir)
+% mkdir outdir
 % Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Wellcome_Leap_802232\Neurophysiology_Data\WEL013\WEL013_PRE\WEL013_2BAC_BL.cdt');
 fileNames={Path.name}'; 
 %chanlocs=load('D:\MATLAB\LAB_MatlabScripts\Chanlocs\chanlocs66_flexnet_compumedics.mat');
 eeglab nogui
-for i= 1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
+for i= 40: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     fileName=fileNames{i};
     pathName=[Path(i).folder sep];
     disp([ 'Loading ' num2str(i) ' out of ' num2str(size(fileNames,1)) '   -   ' fileName ])
@@ -80,15 +81,20 @@ for i= 1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
     EEG = eeg_checkset( EEG );
     EEG_mat = c_TMSEEG_Preprocess_AARATEPPipeline(EEG,...
         'epochTimespan', [-1 1],...
-        'outputDir', outdir,...
+        'outputDir', [outdir sep],...
         'pulseEvent',evname,...
         'outputFilePrefix',[EEG.setname '_Clean'],...
         'ICAType','fastica',...
         'doDecayRemovalPerTrial',true);   %'ICAType','amica',...
-    EEG_mat.setname=[EEG.setname '_AARATEPPipeline'];
-    EEG_mat.filename=[EEG.setname '_AARATEPPipeline.set']
-    EEG_mat.filepath=outdir;
+    
+    if strcmpi(fileName(:,end-3:end),'vhdr')
+        EEG_mat.setname=[fileName(1:end-5) '_AARATEPPipeline'];
+    else
+        EEG_mat.setname=[fileName(1:end-4) '_AARATEPPipeline'];
+    end
+    EEG_mat.filename=[EEG_mat.setname '.set'];
+    EEG_mat.filepath=[outdir sep];
     EEG_mat.datfile='';
-    EEG_mat = pop_saveset( EEG_mat, 'filename',EEG_mat.filename,'filepath',EEG_mat.filepath,'check', 'on','savemode','onefile','version','7.3');
+    EEG = pop_saveset( EEG_mat, 'filename',EEG_mat.filename,'filepath',EEG_mat.filepath,'check', 'on','savemode','onefile','version','7.3');
     clear EEG_mat EEG
 end
