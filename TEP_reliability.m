@@ -36,18 +36,25 @@ EEG{1}=pop_loadset('filepath' , Path(7).folder, 'filename',Path(7).name);
 color=brewermap(2,'set1');
 %figure; topoplot([],EEG{2}.chanlocs, 'style', 'blank',  'electrodes', 'labelpoint', 'chaninfo', EEG{2}.chaninfo)
     
-
+%%
 elec={'fc3' 'fc4' 'f3' 'f5' 'f1' 'fc1' 'c1' 'c3' 'c5'}
-timel=[-800 800];
-LMFP=[]; LMFPste=[];
+%elec={ 'fc3' 'fc4' 'f3' 'f5'}
+timel=[-900 900];
+LMFP=[]; LMFPste=[]; LMFPM=[];
 for ii=1:length(EEG)
 timeInd=EEG{ii}.times>=timel(1) & EEG{ii}.times<=timel(2);
 [elecnum, elecname]=elecName(EEG{ii},elec);
 LMFP(:,:,ii)=double(squeeze(std(EEG{ii}.data(elecnum,timeInd,:),0,1)));
 end
-LMFPM=smoothdata(mean(LMFP(:,[1:5]),2,"omitnan"),'gaussian',20);
+
+LMFPM=smoothdata(mean(LMFP(:,[1:30]),2,"omitnan"),'gaussian',40);
 figure; plot(EEG{1}.times(timeInd),LMFPM(:,:),'LineWidth',2);
 
+figure; tiledlayout(1,10)
+for tt=1:10
+LMFPM=smoothdata(mean(LMFP(:,[1:tt+2]),2,"omitnan"),'gaussian',40);
+ nexttile; plot(EEG{1}.times(timeInd),LMFPM(:,:),'LineWidth',2);
+end
 
 %%
 
