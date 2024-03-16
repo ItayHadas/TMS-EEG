@@ -44,9 +44,16 @@ LMFP=[]; LMFPste=[]; LMFPM=[];
 for ii=1:length(EEG)
 timeInd=EEG{ii}.times>=timel(1) & EEG{ii}.times<=timel(2);
 [elecnum, elecname]=elecName(EEG{ii},elec);
+rel=[0:10:100];
+figure; hold on;
+LMFP=[]; LMFPM=[];
 LMFP(:,:,ii)=double(squeeze(std(EEG{ii}.data(elecnum,timeInd,:),0,1)));
+for pp=2:length(rel)
+LMFPM(:,pp-1)=smoothdata(mean(LMFP(:,[1:rel(pp)]),2,"omitnan"),'gaussian',40);
+plot(EEG{1}.times(timeInd),LMFPM(:,pp-1),'Color',[0.2 0.5 0.9 1.1-2/pp],'LineWidth',1.2); 
 end
-[Y,E] = discretize(LMFP(1,:),size(LMFP,2))
+
+%%
 LMFPM=smoothdata(mean(LMFP(:,[1:30]),2,"omitnan"),'gaussian',40);
 figure; plot(EEG{1}.times(timeInd),LMFPM(:,:),'LineWidth',2); hold on;
 hline(mean(LMFPM(:,:)));
