@@ -5,7 +5,11 @@ function Z2_grand_average(EventName, Subsind,pathi,chan_interp,chanlocs,STDcalc)
 % EventName='MST_motor_HC'   EventName='pre_MST2a'
 % EventName='post_rtms'
 % Subsind=4:6
-[fileNames, pathName]=Z_getSetsFileNames('set',pathi);
+if size(pathi,1)==1
+    [fileNames, pathName]=Z_getSetsFileNames('set',pathi);
+else
+    fileNames=pathi;
+end
 % EventName='Healthy1_1-exponent_15ms'; Subsind=[5:7];
 % EventName='LICI1_non'
 for i=1: size(fileNames,1)
@@ -22,7 +26,9 @@ for i=1: size(fileNames,1)
     if strcmp(chan_interp,'on')
         EEG = pop_interp(EEG, chanlocs, 'spherical');
         %   EEG = pop_chanedit(EEG, 'lookup','E:\\Google_Drive\\MATLAB\\EEGLAB\\plugins\\dipfit2.3\\standard_BEM\\elec\\standard_1005.elc');
-        remove_channels2= {'VEO' 'HEO' 'VEOG' 'HEOG' 'EKG' 'EMG' 'HL 1' 'HL 2' 'Trigger'};
+        %remove_channels2= {'VEO' 'HEO' 'VEOG' 'HEOG' 'EKG' 'EMG' 'HL 1' 'HL 2' 'Trigger'};
+        remove_channels= { 'F11' 'F12' 'FT11' 'FT12' 'CB1' 'CB2'...
+        'lz' 'VEO' 'HEO' 'VEOG' 'HEOG' 'EKG' 'EMG' 'EOG' 'HL 1' 'HL 2' 'Trigger'};
         EEG = pop_select( EEG,'nochannel',remove_channels2);
     end
     
