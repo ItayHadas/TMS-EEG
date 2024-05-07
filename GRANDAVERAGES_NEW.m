@@ -1,5 +1,5 @@
-function GRANDAVERAGES_NEW(EventName, Subsind,pathi,fileNames,chan_interp,chanlocs)
-    eeglabdir='/media/ipp/DATA/Documents/MATLAB/eeglab2024.0';
+function GRANDAVERAGES_NEW(EventName, Subsind,pathi,fileNames,chan_interp,chanlocs,edf)
+  
 
 for i=1: size(fileNames,1)
     fileName=fileNames{i};
@@ -130,6 +130,9 @@ EEG.filename=[EEG.setname '.set'];
 EEG.datfile=[EEG.setname '.fdt'];
 EEG = eeg_checkset( EEG );
 EEG = pop_saveset( EEG, [pathi EEG.filename]);
+if edf=true
+EEG = pop_writeeeg(EEG_mat, [pathi EEG.setname '.edf'], 'TYPE','EDF');
+end
 
 
 return;
