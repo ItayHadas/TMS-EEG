@@ -9,7 +9,7 @@ if (ispc)
     Path = dir('A:\WorkingSet\WellcomeLeap_TEP\**\*SPD_*.set');
     %Path = dir('A:\WorkingSet\TEPs_GRANDS')
     outdir='A:\WorkingSet\TEPs_GRANDS';
-    eeglabdir='D:\MATLAB\EEGLAB'; 
+    eeglabdir='D:\MATLAB\EEGLAB2024.0'; 
     FTdir='D:\MATLAB\fieldtrip'
 elseif (ismac || isunix)
     sep='/';
@@ -27,7 +27,7 @@ run([FTdir sep 'ft_defaults'])
 addpath([GITS sep 'TESA']); 
 addpath(genpath([GITS sep 'TMS-EEG']),genpath([GITS sep 'AARATEPPipeline']));
 addpath(eeglabdir); 
-eeglab
+eeglab popload_bv
 
 
 

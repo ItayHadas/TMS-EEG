@@ -11,6 +11,8 @@ if (ispc)
     GITS='D:\GITs\';
     Path = dir('\\ad.ucsd.edu\ahs\apps\INTERPSYC\DATA\Wellcome_Leap_802232\Neurophysiology_Data\**\*SPD_*.cdt');
     outdir='A:\WorkingSet\WellcomeLeap_TEP';
+    preprocessdir='/media/ipp/DATA/EEG_DATA/Maintenance/';
+    Path = dir([preprocessdir '/**/*.vhdr']);
 elseif (ismac || isunix)
     sep='/';
     not_sep='\';
@@ -38,7 +40,8 @@ fileNames={Path.name}';
 
 for i=1: size(fileNames,1) %%%%%%%%%%%%%%%%% PIPELINE LOOP
 %% loading the files
-    
+%pathName="D:\OneDrive - University of California, San Diego Health\DATA\Maintenance\"
+% fileName="IND001_TMSEEG_T0_S1.vhdr"
     fileName=fileNames{i};
     %fileName=Path(i).name;
     pathName=[Path(i).folder sep];
